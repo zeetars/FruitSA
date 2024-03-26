@@ -5,7 +5,7 @@ namespace FruitSA.Model
 {
     public class Product
     {
-        [Required]
+        [Key]
         public int ProductId { get; set; }
         [Required]
         public string ProductCode { get; set; }
@@ -16,6 +16,7 @@ namespace FruitSA.Model
         [ForeignKey("nameof(CategoryKey)")]
         public int CategoryId { get; set; }       
         [Required]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
         public string? Image { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;

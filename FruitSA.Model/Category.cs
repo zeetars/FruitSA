@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace FruitSA.Model
 {
-    internal class Category
+    public class Category
     {
-        [Required]
+        [Key]
         public int CategoryId { get; set; }
         [Required]
         public string Name { get; set; }

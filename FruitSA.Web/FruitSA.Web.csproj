@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FruitSA.API\FruitSA.API.csproj" />
+    <ProjectReference Include="..\FruitSA.Model\FruitSA.Model.csproj" />
+  </ItemGroup>
+
+</Project>
