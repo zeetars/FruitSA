@@ -57,7 +57,7 @@ namespace FruitSA.API.Controllers
                     return BadRequest();
                 }
                 var createdProduct = await productRepository.AddProduct(Product);
-                return CreatedAtAction(nameof(createdProduct), new {id = createdProduct.ProductId}, createdProduct);
+                return CreatedAtAction(nameof(GetProductById), new {id = createdProduct.ProductId}, createdProduct);
             }
             catch (Exception)
             {

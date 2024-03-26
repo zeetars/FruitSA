@@ -56,7 +56,7 @@ namespace FruitSA.API.Controllers
                     return BadRequest();
                 }
                 var createdCategory = await categoryRepository.AddCategory(Category);
-                return CreatedAtAction(nameof(createdCategory), new { id = createdCategory.CategoryId }, createdCategory);
+                return CreatedAtAction(nameof(GetCategoryById), new { id = createdCategory.CategoryId }, createdCategory);
             }
             catch (Exception)
             {
