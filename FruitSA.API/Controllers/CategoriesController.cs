@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FruitSA.API.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
+    [ApiController]    
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryRepository categoryRepository;

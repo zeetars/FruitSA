@@ -5,13 +5,13 @@ using System;
 
 namespace FruitSA.API.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
-    public class ProductController:ControllerBase
+    [ApiController]    
+    public class ProductsController:ControllerBase
     {
         private readonly IProductRepository productRepository;
 
-        public ProductController(IProductRepository productRepository)
+        public ProductsController(IProductRepository productRepository)
         {
             this.productRepository = productRepository;
         }
