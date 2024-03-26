@@ -29,7 +29,7 @@ namespace FruitSA.API.Controllers
             }
         }
 
-        [HttpGet("id:int")]
+        [HttpGet("{id:int}")]
         public async Task<ActionResult<Product>> GetProductById(int id)
         {
             try
@@ -65,7 +65,7 @@ namespace FruitSA.API.Controllers
             }
         }
 
-        [HttpPut("id:int")]
+        [HttpPut("{id:int}")]
         public async Task<ActionResult<Product>> UpdateProduct(int id, Product Product)
         {
             try
@@ -91,7 +91,7 @@ namespace FruitSA.API.Controllers
             }
         }
 
-        [HttpDelete("id:int")]
+        [HttpDelete("{id:int}")]
         public async Task<ActionResult<Product>> DeleteProduct(int id)
         {
             try
