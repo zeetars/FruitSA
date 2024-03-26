@@ -47,7 +47,7 @@ namespace FruitSA.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Product>> CreateCategory([FromForm] Category Category)
+        public async Task<ActionResult<Category>> CreateCategory(Category Category)
         {
             try
             {
