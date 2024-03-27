@@ -64,21 +64,17 @@ namespace FruitSA.API.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<Category>> UpdateCategory(int id, Category Category)
+        [HttpPut]
+        public async Task<ActionResult<Category>> UpdateCategory(Category Category)
         {
             try
             {
-                if (id != Category.CategoryId)
-                {
-                    return BadRequest("ID Mismatch.");
-                }
-
-                var categoryToUpdate = await categoryRepository.GetCategoryById(id);
+                
+                var categoryToUpdate = await categoryRepository.GetCategoryById(Category.CategoryId);
 
                 if (categoryToUpdate == null)
                 {
-                    return NotFound($"There is no Category with ID: {id}");
+                    return NotFound($"There is no Category with ID: {Category.CategoryId}");
                 }
 
                 return await categoryRepository.UpdateCategory(Category);

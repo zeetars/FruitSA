@@ -1,11 +1,23 @@
 using FruitSA.Web.Components;
+using FruitSA.Web.Models;
+using FruitSA.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddHttpClient<IProductService, ProductService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7170/");
+});
 
+builder.Services.AddHttpClient<ICategoryService, CategoryService>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7170/");
+});
+
+builder.Services.AddAutoMapper(typeof(Mapping));
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

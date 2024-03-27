@@ -65,21 +65,17 @@ namespace FruitSA.API.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<Product>> UpdateProduct(int id, Product Product)
+        [HttpPut]
+        public async Task<ActionResult<Product>> UpdateProduct(Product Product)
         {
             try
             {
-                if(id != Product.ProductId)
-                {
-                    return BadRequest("ID Mismatch.");
-                }
-
-                var productToUpdate = await productRepository.GetProductById(id);
+               
+                var productToUpdate = await productRepository.GetProductById(Product.ProductId);
 
                 if(productToUpdate == null)
                 {
-                    return NotFound($"There is no Product with ID: {id}");
+                    return NotFound($"There is no Product with ID: {Product.ProductId}");
                 }
 
                 return await productRepository.UpdateProduct(Product);

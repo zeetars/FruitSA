@@ -6,6 +6,12 @@ a, .btn-link {
     color: #006bb7;
 }
 
+.btn {
+    font-size: 10px;
+    font-weight: bold;
+    padding: 4px 15px;
+}
+
 .btn-primary {
     color: #fff;
     background-color: #1b6ec2;
@@ -48,4 +54,9 @@ h1:focus {
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
+}
+
+.imageThumbnail {
+    height: 200px;
+    width: auto;
 }

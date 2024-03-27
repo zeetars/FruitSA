@@ -1,0 +1,64 @@
+﻿@page "/add-product"
+@page "/edit-product/{id}"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@using System.IO
+@inherits AddProductBase
+
+<h3>Add Product</h3>
+@if (AddProductModel != null)
+{
+    <EditForm Model="@AddProductModel" OnValidSubmit="HandleValidSubmit" FormName="AddForm">
+        <DataAnnotationsValidator />
+        <input type="hidden" id="productId" @bind="AddProductModel.ProductId">
+        <div class="form-group">
+            <label for="productCode">Product Code:</label>
+            <InputText id="productCode" @bind-Value="AddProductModel.ProductCode" class="form-control" />
+            <ValidationMessage For="@(() => AddProductModel.ProductCode)" />
+        </div>
+
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <InputText id="name" @bind-Value="AddProductModel.Name" class="form-control" />
+            <ValidationMessage For="@(() => AddProductModel.Name)" />
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <InputText id="description" @bind-Value="AddProductModel.Description" class="form-control" />
+            <ValidationMessage For="@(() => AddProductModel.Description)" />
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category:</label>
+            <InputSelect id="category" @bind-Value="AddProductModel.CategoryId" class="form-control">
+                @foreach (var category in Categories)
+                {
+                    <option value="@category.CategoryId">@category.Name</option>
+                }
+            </InputSelect>
+            <ValidationMessage For="@(() => AddProductModel.CategoryId)" />
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price (R):</label>
+            <InputNumber id="price" @bind-Value="AddProductModel.Price" class="form-control" />
+            <ValidationMessage For="@(() => AddProductModel.Price)" />
+        </div>
+
+        <div class="form-group">
+            <label for="image">Image:</label>
+            <input type="file" id="image" @bind="AddProductModel.Image" class="form-control" />
+            <ValidationMessage For="@(() => AddProductModel.Image)" />
+        </div>
+        @if(id == null)
+        {
+            <button type="submit" class="btn btn-primary" style="margin-top:20px;">Add Product</button>
+        }
+        else
+        {
+            <button type="submit" class="btn btn-primary" style="margin-top:20px;">Edit Product</button>
+        }
+
+    </EditForm>
+}
