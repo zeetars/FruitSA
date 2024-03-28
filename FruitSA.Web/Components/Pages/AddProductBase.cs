@@ -6,20 +6,23 @@ using Microsoft.AspNetCore.Components;
 
 namespace FruitSA.Web.Components.Pages
 {
-    public class AddProductBase:ComponentBase
+    public class AddProductBase : ComponentBase
     {
-      
+
+        [Parameter]
+        public string id { get; set; }
+
         [Inject]
         NavigationManager NavigationManager { get; set; }
         [Inject]
         public IProductService ProductService { get; set; }
+        public Product Product { get; set; } = new Product();
+
         [Inject]
         public ICategoryService CategoryService { get; set; }
         public IEnumerable<Category> Categories { get; set; } = Enumerable.Empty<Category>();
 
-        [Parameter]
-        public string id { get; set; }
-        public Product Product { get; set; } = new Product();
+
         public AddProductModel AddProductModel { get; set; } = new AddProductModel();
 
         [Inject]
@@ -27,21 +30,16 @@ namespace FruitSA.Web.Components.Pages
         protected override async Task OnInitializedAsync()
         {
             Categories = (await CategoryService.GetCategories()).ToList();
-            int.TryParse(id, out int ProductId);
-            if (ProductId != 0)
-            {
-                Product = await ProductService.GetProductById(ProductId);
-                Mapper.Map(Product, AddProductModel);
-            }
-            
 
+            Product = await ProductService.GetProductById(int.Parse(id));
         }
 
         protected async Task HandleValidSubmit()
         {
+
             int.TryParse(id, out int ProductId);
-           
-            Mapper.Map(AddProductModel, Product);
+
+
             Product result = null;
             if (ProductId != 0)
             {
@@ -59,5 +57,6 @@ namespace FruitSA.Web.Components.Pages
                 NavigationManager.NavigateTo("/products");
             }
         }
+
     }
 }

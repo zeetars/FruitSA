@@ -15,6 +15,7 @@ namespace FruitSA.API.Models
         }
         public async Task<Product> AddProduct(Product Product)
         {
+            
             var result = await appDbContext.Products.AddAsync(Product);
             await appDbContext.SaveChangesAsync();
             return result.Entity;
@@ -34,13 +35,15 @@ namespace FruitSA.API.Models
 
         public async Task<Product> GetProductById(int ProductId)
         {
-            return await appDbContext.Products.FirstOrDefaultAsync(p => p.ProductId == ProductId);
+            return await appDbContext.Products.Include(p => p.Category).FirstOrDefaultAsync(p => p.ProductId == ProductId);
 
         }
 
         public async Task<IEnumerable<Product>> GetProducts()
         {
-            return await appDbContext.Products.ToListAsync();
+            return await appDbContext.Products
+                .Include(p => p.Category)
+                .ToListAsync();
         }
 
         public async Task<Product> UpdateProduct(Product Product)
@@ -57,7 +60,6 @@ namespace FruitSA.API.Models
 
                 await appDbContext.SaveChangesAsync();
                 return result;
-
             }
 
             return null;

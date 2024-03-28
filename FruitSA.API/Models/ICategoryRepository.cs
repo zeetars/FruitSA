@@ -8,7 +8,7 @@ namespace FruitSA.API.Models
         Task<Category> GetCategoryById(int CategoryId);
         Task<Category> AddCategory(Category Category);
         Task<Category> UpdateCategory(Category Category);
-        Task<Category> DeleteCategory(int CategoryId);
+        //Task<Category> DeleteCategory(int CategoryId);
 
     }
 }

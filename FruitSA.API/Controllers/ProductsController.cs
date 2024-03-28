@@ -50,14 +50,15 @@ namespace FruitSA.API.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> CreateProduct(Product Product)
         {
+           
             try
             {
-                if(Product == null)
+                if (Product == null)
                 {
                     return BadRequest();
                 }
                 var createdProduct = await productRepository.AddProduct(Product);
-                return CreatedAtAction(nameof(GetProductById), new {id = createdProduct.ProductId}, createdProduct);
+                return CreatedAtAction(nameof(GetProductById), new { id = createdProduct.ProductId }, createdProduct);
             }
             catch (Exception)
             {
@@ -68,12 +69,13 @@ namespace FruitSA.API.Controllers
         [HttpPut]
         public async Task<ActionResult<Product>> UpdateProduct(Product Product)
         {
+
             try
             {
-               
+
                 var productToUpdate = await productRepository.GetProductById(Product.ProductId);
 
-                if(productToUpdate == null)
+                if (productToUpdate == null)
                 {
                     return NotFound($"There is no Product with ID: {Product.ProductId}");
                 }

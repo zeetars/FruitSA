@@ -33,21 +33,25 @@ namespace FruitSA.Web.Services
             var updatedProduct = await response.Content.ReadFromJsonAsync<Product>();
 
             return updatedProduct;
+           
         }
 
         public async Task<Product> CreateProduct(Product Product)
         {
+            
             var apiUrl = "api/products";
             var jsonContent = new StringContent(JsonConvert.SerializeObject(Product), Encoding.UTF8,
                 "application/json");
             var response = await httpClient.PostAsync(apiUrl, jsonContent);
-            response.EnsureSuccessStatusCode();
+            //response.EnsureSuccessStatusCode();
             var createdProduct = await response.Content.ReadFromJsonAsync<Product>();
 
             return createdProduct;
         }
 
-
-
+        public async Task<Product> DeleteProduct(int productId)
+        {
+            return await httpClient.DeleteFromJsonAsync<Product>($"api/products/{productId}");
+        }
     }
 }

@@ -18,17 +18,17 @@ namespace FruitSA.API.Models
             return result.Entity;
         }
 
-        public async Task<Category> DeleteCategory(int CategoryId)
-        {
-            var result = await appDbContext.Categories.FirstOrDefaultAsync(c => c.CategoryId == CategoryId);
-            if (result != null)
-            {
-                appDbContext.Categories.Remove(result);
-                await appDbContext.SaveChangesAsync();
-                return result;
-            }
-            return null;
-        }
+        //public async Task<Category> DeleteCategory(int CategoryId)
+        //{
+        //    var result = await appDbContext.Categories.FirstOrDefaultAsync(c => c.CategoryId == CategoryId);
+        //    if (result != null)
+        //    {
+        //        appDbContext.Categories.Remove(result);
+        //        await appDbContext.SaveChangesAsync();
+        //        return result;
+        //    }
+        //    return null;
+        //}
 
         public async Task<IEnumerable<Category>> GetCategories()
         {

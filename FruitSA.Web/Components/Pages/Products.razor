@@ -1,8 +1,11 @@
 ﻿@page "/products"
 @inherits ProductsBase
 @rendermode InteractiveServer
-
+<style>
+    td{vertical-align:middle;}
+</style>
 <h3>Products</h3>
+<p style="text-align:center;"><a href="/add-product" class="btn btn-success">ADD</a></p>
 
 @if (Products == null)
 {
@@ -10,53 +13,33 @@
 }
 else
 {
-    <div class="row">
+    @* <div class="row">
         @foreach (var product in Products)
-        {
-            var category = Categories.FirstOrDefault(c => c.CategoryId == product.CategoryId);
-            <div class="card m-3" style="min-width:18rem; max-width:30.5%;">
-                <div class="card-header">
-                    <h3>@product.Name</h3>
-                </div>
-                <img class="card-img-top imageThumbnail" src="@product.Image" />
-                <div class="card-footer text-center">
-                    <a href="@($"/product-details/{product.ProductId}")" class="btn btn-primary m-1">View</a>
-                    
-                    <a href="@($"/edit-product/{product.ProductId}")" class="btn btn-info">Edit</a>
-                    <a href="@($"/delete/{product.ProductId}")" class="btn btn-danger">Delete</a>
-                    
-                </div>
-            </div>
-
-        }
-    </div>
-    <div class="row">
-        @foreach (var product in Products)
-        {
-            var category = Categories.FirstOrDefault(c => c.CategoryId == product.CategoryId);
-            <div class="card m-3" style="min-width:14rem; max-width:30%;">
-            
-            <img class="card-img-top imageThumbnail" src="@product.Image" />
+        {            
+            <div class="card col-md-4 col-sm-12 m-1">
+           
+            <img class="card-img-top imageThumbnail" src="@($"images/{@product.Image}")" />
             <div class="card-body">
                 <h5 class="card-title">@product.Name</h5>
                 <p class="card-text">@product.Description</p>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Category: @category.Name</li>
+                <li class="list-group-item">Category: @product.Category.Name</li>
                 <li class="list-group-item">Code: @product.ProductCode</li>
                 <li class="list-group-item">Price (R): @product.Price</li>
             </ul>
-            <div class="card-body">
-                <a href="@($"/edit-product/{product.ProductId}")" class="btn btn-info">Edit</a>
-                <a href="@($"/delete/{product.ProductId}")" class="btn btn-danger">Delete</a>
+                <div class="card-body text-center">
+                <a href="@($"/edit-product/{@product.ProductId}")" class="btn btn-info">Edit</a>
+                
             </div>
         </div>
         }
-    </div>
-    <table class="table">
+    </div> *@
+    <table class="table table-success table-striped">
+   
         <thead>
             <tr>
-                <th>ID:</th>
+                <th></th>
                 <th>Code:</th>
                 <th>Name</th>
                 <th>Description</th>
@@ -69,13 +52,13 @@ else
         <tbody>
             @foreach (var product in Products)
             {
-                var category = Categories.FirstOrDefault(c => c.CategoryId == product.CategoryId);
+
                 <tr>
-                    <td>@product.ProductId</td>
+                    <td><img src="@($"images/{@product.Image}")" width="80px" height="80px"/></td>
                     <td>@product.ProductCode</td>
                     <td>@product.Name</td>
                     <td>@product.Description</td>
-                    <td>@category.Name</td>
+                    <td>@product.Category.Name</td>
                     <td>@product.Price</td>
                     <td>@product.CreatedDate.ToShortDateString()</td>
                     <td>
@@ -86,10 +69,11 @@ else
             }
 
             <tr>
-                <td colspan="8">
+                <td colspan="8" style="text-align:center;">
                     <a href="/add-product" class="btn btn-success">ADD</a>
                 </td>
             </tr>
         </tbody>
-    </table>
+    </table> 
+   
 }

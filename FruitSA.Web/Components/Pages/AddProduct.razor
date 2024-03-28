@@ -3,61 +3,79 @@
 @rendermode InteractiveServer
 @using System.ComponentModel.DataAnnotations
 @using System.IO
-@inherits AddProductBase
+@inherits ProductsBase
 
-<h3>Add Product</h3>
-@if (AddProductModel != null)
+@if(Id==null)
 {
-    <EditForm Model="@AddProductModel" OnValidSubmit="HandleValidSubmit" FormName="AddForm">
+    <h3>Add Product</h3>
+}
+else
+{
+    <h3>Edit Product</h3>
+}
+
+@if (Product != null)
+{
+    <EditForm Model="@Product" OnValidSubmit="HandleValidSubmit" FormName="AddForm">
         <DataAnnotationsValidator />
-        <input type="hidden" id="productId" @bind="AddProductModel.ProductId">
+        <input type="hidden" id="productId" @bind="Product.ProductId">
         <div class="form-group">
             <label for="productCode">Product Code:</label>
-            <InputText id="productCode" @bind-Value="AddProductModel.ProductCode" class="form-control" />
-            <ValidationMessage For="@(() => AddProductModel.ProductCode)" />
+            <InputText id="productCode" @bind-Value="Product.ProductCode" class="form-control" readonly/>
+            <ValidationMessage For="@(() => Product.ProductCode)" />
         </div>
 
         <div class="form-group">
             <label for="name">Name:</label>
-            <InputText id="name" @bind-Value="AddProductModel.Name" class="form-control" />
-            <ValidationMessage For="@(() => AddProductModel.Name)" />
+            <InputText id="name" @bind-Value="Product.Name" class="form-control" />
+            <ValidationMessage For="@(() => Product.Name)" />
         </div>
 
         <div class="form-group">
             <label for="description">Description:</label>
-            <InputText id="description" @bind-Value="AddProductModel.Description" class="form-control" />
-            <ValidationMessage For="@(() => AddProductModel.Description)" />
+            <InputText id="description" @bind-Value="Product.Description" class="form-control" />
+            <ValidationMessage For="@(() => Product.Description)" />
         </div>
 
         <div class="form-group">
             <label for="category">Category:</label>
-            <InputSelect id="category" @bind-Value="AddProductModel.CategoryId" class="form-control">
+            <InputSelect id="category" @bind-Value="Product.CategoryId" class="form-control">
+                <option value="">Select Category</option>
                 @foreach (var category in Categories)
                 {
                     <option value="@category.CategoryId">@category.Name</option>
                 }
             </InputSelect>
-            <ValidationMessage For="@(() => AddProductModel.CategoryId)" />
+            @if (!string.IsNullOrEmpty(ProductErrorMessage))
+            {
+                <p style="color: red;">@ProductErrorMessage</p>
+            }
         </div>
 
         <div class="form-group">
             <label for="price">Price (R):</label>
-            <InputNumber id="price" @bind-Value="AddProductModel.Price" class="form-control" />
-            <ValidationMessage For="@(() => AddProductModel.Price)" />
+            <InputNumber id="price" @bind-Value="Product.Price" class="form-control" />
+            <ValidationMessage For="@(() => Product.Price)" />
         </div>
 
-        <div class="form-group">
-            <label for="image">Image:</label>
-            <input type="file" id="image" @bind="AddProductModel.Image" class="form-control" />
-            <ValidationMessage For="@(() => AddProductModel.Image)" />
-        </div>
-        @if(id == null)
+       
+        
+          <div class="form-group">
+                <label for="image">Image:</label>
+                <InputFile OnChange="@HandleFileChange" id="image" accept=".jpg,.jpeg,.png" />
+                @if (!string.IsNullOrEmpty(ErrorMessage))
+                {
+                    <p style="color: red;">@ErrorMessage</p>
+                }
+            </div>
+        @if (Id == null)
         {
             <button type="submit" class="btn btn-primary" style="margin-top:20px;">Add Product</button>
         }
         else
         {
-            <button type="submit" class="btn btn-primary" style="margin-top:20px;">Edit Product</button>
+            <button type="submit" class="btn btn-primary" style="margin-top:20px;">Save Product</button>
+            <button type="button" onclick="@HandleProductDelete" style="margin-top:20px;"  class="btn btn-danger">Delete</button>
         }
 
     </EditForm>
