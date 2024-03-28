@@ -1,0 +1,54 @@
+﻿@page "/categories"
+@inherits CategoriesBase
+@rendermode InteractiveServer
+<h3>Categories</h3>
+
+<p style="text-align:center;"><a href="/add-category" class="btn btn-success">ADD</a></p>
+
+@if (Categories == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{    
+    <table class="table table-success table-striped">
+
+        <thead>
+            <tr>
+                
+                <th>Code:</th>
+                <th>Name</th>
+                <th>Status</th>                
+                <th>Date Created</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Categories)
+            {
+
+                <tr>
+                    
+                    <td>@category.CategoryCode</td>
+                    <td>@category.Name</td>
+                    <td>@category.IsActive</td>
+                    
+                    <td>@category.CreatedDate.ToShortDateString()</td>
+                    <td>
+                        <a href="@($"/view-category/{category.CategoryId}")" class="btn btn-info">View</a>
+
+                    </td>
+                </tr>
+            }
+
+            <tr>
+                <td colspan="8" style="text-align:center;">
+                    <a href="/add-product" class="btn btn-success">ADD</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+}
+
+

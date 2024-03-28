@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FruitSA.Model", "FruitSA.Mo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FruitSA.API", "FruitSA.API\FruitSA.API.csproj", "{57CC38CD-9054-4599-8F5D-CF83FE5123FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FruitSA.Web", "FruitSA.Web\FruitSA.Web.csproj", "{27EA8949-1D9C-437C-9A08-A7C3D3089927}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FruitSA.Web", "FruitSA.Web\FruitSA.Web.csproj", "{27EA8949-1D9C-437C-9A08-A7C3D3089927}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

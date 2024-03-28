@@ -43,7 +43,7 @@ namespace FruitSA.Web.Services
             var jsonContent = new StringContent(JsonConvert.SerializeObject(Product), Encoding.UTF8,
                 "application/json");
             var response = await httpClient.PostAsync(apiUrl, jsonContent);
-            //response.EnsureSuccessStatusCode();
+            response.EnsureSuccessStatusCode();
             var createdProduct = await response.Content.ReadFromJsonAsync<Product>();
 
             return createdProduct;
