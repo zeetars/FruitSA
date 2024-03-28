@@ -1,6 +1,6 @@
 ﻿@page "/view-product/{id}"
 @inherits ProductsBase
-
+<PageTitle>Fruit SA - Products</PageTitle>
 @if (Products == null)
 {
     <p><em>Loading...</em></p>
@@ -25,7 +25,7 @@ else
                     <li class="list-group-item">Price (R): @Product.Price</li>
                 </ul>
                 <div class="card-body text-center">
-                    <a href="@($"/edit-product/{@Product.ProductId}")" class="btn btn-info">Edit</a>
+                <a href="@($"/edit-product/{@Product.ProductId}")" class="btn btn-info"><i class="fas fa-edit"></i> Edit</a>
 
                 </div>
             </div>

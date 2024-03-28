@@ -4,7 +4,7 @@
 @using System.ComponentModel.DataAnnotations
 @using System.IO
 @inherits ProductsBase
-
+<PageTitle>Fruit SA - Products</PageTitle>
 @if(Id==null)
 {
     <h3>Add Product</h3>
@@ -70,12 +70,12 @@ else
             </div>
         @if (Id == null)
         {
-            <button type="submit" class="btn btn-primary" style="margin-top:20px;">Add Product</button>
+            <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-plus-square"></i> Add Product</button>
         }
         else
         {
-            <button type="submit" class="btn btn-primary" style="margin-top:20px;">Save Product</button>
-            <button type="button" onclick="@HandleProductDelete" style="margin-top:20px;"  class="btn btn-danger">Delete</button>
+            <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-edit"></i>Save Product</button>
+            <button type="button" onclick="@HandleProductDelete" style="margin-top:20px;" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
         }
 
     </EditForm>

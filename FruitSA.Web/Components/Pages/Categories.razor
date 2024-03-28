@@ -1,26 +1,28 @@
 ﻿@page "/categories"
 @inherits CategoriesBase
 @rendermode InteractiveServer
+
+<PageTitle>Fruit SA - Categories</PageTitle>
 <h3>Categories</h3>
 
-<p style="text-align:center;"><a href="/add-category" class="btn btn-success">ADD</a></p>
+<p style="text-align:center;"><a href="/add-category" class="btn btn-success"><i class="fas fa-plus-square"></i> ADD</a></p>
 
 @if (Categories == null)
 {
     <p><em>Loading...</em></p>
 }
 else
-{    
+{
     <table class="table table-success table-striped">
 
         <thead>
             <tr>
-                
+
                 <th>Code:</th>
                 <th>Name</th>
-                <th>Status</th>                
+                <th>IsActive</th>
                 <th>Date Created</th>
-                
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -28,14 +30,21 @@ else
             {
 
                 <tr>
-                    
+
                     <td>@category.CategoryCode</td>
                     <td>@category.Name</td>
-                    <td>@category.IsActive</td>
-                    
+                    @if (category.IsActive == 1)
+                    {
+                        <td>Yes</td>
+                    }
+                    else
+                    {
+                        <td>No</td>
+                    }                   
+
                     <td>@category.CreatedDate.ToShortDateString()</td>
                     <td>
-                        <a href="@($"/view-category/{category.CategoryId}")" class="btn btn-info">View</a>
+                        <a href="@($"/edit-category/{category.CategoryId}")" class="btn btn-info"><i class="fas fa-edit"></i> Edit</a>
 
                     </td>
                 </tr>
@@ -43,7 +52,7 @@ else
 
             <tr>
                 <td colspan="8" style="text-align:center;">
-                    <a href="/add-product" class="btn btn-success">ADD</a>
+                    <a href="/add-category" class="btn btn-success"><i class="fas fa-plus-square"></i> ADD</a>
                 </td>
             </tr>
         </tbody>

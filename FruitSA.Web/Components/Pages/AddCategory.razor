@@ -1,0 +1,63 @@
+﻿@page "/add-category"
+@page "/edit-category/{id}"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@using System.IO
+@inherits CategoriesBase
+
+<PageTitle>Fruit SA - Categories</PageTitle>
+@if(Id==null)
+{
+    <h3>Add Category</h3>
+}
+else
+{
+    <h3>Edit Category</h3>
+}
+
+@if (Category != null)
+{
+    <EditForm Model="@Category" OnValidSubmit="HandleValidSubmit" FormName="AddForm">
+        <DataAnnotationsValidator />
+        <input type="hidden" id="categoryId" @bind="Category.CategoryId">
+        <div class="form-group">
+            <label for="CategoryCode">Category Code:</label>
+            <InputText id="CategoryCode" @bind-Value="Category.CategoryCode" class="form-control"/>
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <p style="color: red;">@errorMessage</p>
+            }
+        </div>
+
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <InputText id="name" @bind-Value="Category.Name" class="form-control" />
+            <ValidationMessage For="@(() => Category.Name)" />
+        </div>
+
+
+        <div class="form-group">
+            <label for="categoryStatus">IsActive:</label>
+            <InputSelect id="categoryStatus" @bind-Value="Category.IsActive" class="form-control">
+                              
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </InputSelect>
+          @*   @if (!string.IsNullOrEmpty(CategoryErrorMessage))
+            {
+                <p style="color: red;">@CategoryErrorMessage</p>
+            } *@
+        </div>
+
+        @if (Id == null)
+        {
+            <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-plus-square"></i> Add Category</button>
+        }
+        else
+        {
+            <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-edit"></i> Save Category</button>
+            @* <button type="button" onclick="@HandleCategoryDelete" style="margin-top:20px;"  class="btn btn-danger">Delete</button> *@
+        }
+
+    </EditForm>
+}

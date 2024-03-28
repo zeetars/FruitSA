@@ -1,11 +1,16 @@
 ﻿@page "/products"
 @inherits ProductsBase
 @rendermode InteractiveServer
+
+<PageTitle>Fruit SA - Products</PageTitle>
 <style>
     td{vertical-align:middle;}
 </style>
 <h3>Products</h3>
-<p style="text-align:center;"><a href="/add-product" class="btn btn-success">ADD</a></p>
+<p style="text-align:center;">
+    <a href="/add-product" class="btn btn-success"><i class="fas fa-plus-square"></i> ADD</a>
+    <a href="/upload-products" class="btn btn-success"><i class="fas fa-file-excel"></i> UPLOAD</a>
+</p>
 
 @if (Products == null)
 {
@@ -62,7 +67,7 @@ else
                     <td>@product.Price</td>
                     <td>@product.CreatedDate.ToShortDateString()</td>
                     <td>
-                        <a href="@($"/view-product/{product.ProductId}")" class="btn btn-info">View</a>
+                        <a href="@($"/view-product/{product.ProductId}")" class="btn btn-info"><i class="fas fa-info-circle"></i> View</a>
                        
                     </td>
                 </tr>
@@ -70,7 +75,8 @@ else
 
             <tr>
                 <td colspan="8" style="text-align:center;">
-                    <a href="/add-product" class="btn btn-success">ADD</a>
+                    <a href="/add-product" class="btn btn-success"><i class="fas fa-plus-square"></i> ADD</a>
+                    <a href="/upload-products" class="btn btn-success"><i class="fas fa-file-excel"></i> UPLOAD</a>
                 </td>
             </tr>
         </tbody>
