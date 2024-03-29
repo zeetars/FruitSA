@@ -7,6 +7,11 @@
     td{vertical-align:middle;}
 </style>
 <h3>Products</h3>
+
+@* @if (!string.IsNullOrEmpty(successMessage))
+{
+    <p style="color: green;" class="card-text">@sucessMessage</p>
+} *@
 <p style="text-align:center;">
     <a href="/add-product" class="btn btn-success"><i class="fas fa-plus-square"></i> ADD</a>
     <a href="/upload-products" class="btn btn-success"><i class="fas fa-file-excel"></i> UPLOAD</a>

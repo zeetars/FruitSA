@@ -64,5 +64,6 @@ namespace FruitSA.API.Models
 
             return null;
         }
+
     }
 }

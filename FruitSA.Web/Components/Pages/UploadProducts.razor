@@ -1,0 +1,39 @@
+﻿@page "/upload-products"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@using System.IO
+@inherits UploadProductsBase
+
+<PageTitle>Fruit SA - Products</PageTitle>
+
+<div class="row justify-content-center m-3" style="text-align:center;">
+
+    <div class="card m-3" style="min-width:18rem; max-width:22rem;">
+
+        <img class="card-img-top imageThumbnail" src="/images/excel.jpg" style="margin-top:10px;" />
+        <div class="card-body">
+            <h5 class="card-title">Upload Excel Files</h5>
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <p style="color: red;" class="card-text">@errorMessage</p>
+            }
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <p style="color: green;" class="card-text">@successMessage</p>
+            }
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <InputFile id="upload" OnChange="HandleFileChange" accept=".xlsx" />
+            </li>
+            
+        </ul>
+        <div class="card-body text-center">
+            <button @onclick="UploadProducts" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-upload"></i> Upload File</button>
+
+        </div>
+    </div>
+
+</div>
+
+

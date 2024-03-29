@@ -18,7 +18,7 @@ namespace FruitSA.Model
         [Required]
         [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
-        public string? Image { get; set; }
+        public string? Image { get; set; } = "default-image.jpg";
         public Category? Category { get; set; }
         public DateTime CreatedDate { get; set; } = DateTime.Now;
     }

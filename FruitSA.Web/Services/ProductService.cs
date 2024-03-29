@@ -1,6 +1,7 @@
 ﻿using FruitSA.Model;
 using System.Text;
 using Newtonsoft.Json;
+using FruitSA.Web.Components.Pages;
 
 namespace FruitSA.Web.Services
 {
@@ -52,6 +53,19 @@ namespace FruitSA.Web.Services
         public async Task<Product> DeleteProduct(int productId)
         {
             return await httpClient.DeleteFromJsonAsync<Product>($"api/products/{productId}");
+        }
+
+        public async Task<IEnumerable<Product>> CreateProducts(List<Product> Products)
+        {
+            var apiUrl = "api/uploads";
+            var jsonContent = new StringContent(JsonConvert.SerializeObject(Products), Encoding.UTF8,
+                "application/json");
+            var response = await httpClient.PostAsync(apiUrl, jsonContent);
+            response.EnsureSuccessStatusCode();
+            var allProducts = await this.GetProducts();
+
+            return allProducts;
+
         }
     }
 }
