@@ -5,6 +5,7 @@ using FruitSA.Web.Providers;
 using FruitSA.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.JSInterop;
 using System.IO;
 
 namespace FruitSA.Web.Components.Pages
@@ -14,7 +15,10 @@ namespace FruitSA.Web.Components.Pages
         [Parameter]
         public string? Id { get; set; }
         public string? CategoryName { get; set; }
-        
+
+        [Inject]
+        IJSRuntime JSRuntime { get; set; }
+
         [Inject]
         NavigationManager NavigationManager { get; set; }
         [Inject]
@@ -27,6 +31,7 @@ namespace FruitSA.Web.Components.Pages
         public IEnumerable<Category> Categories { get; set; } = Enumerable.Empty<Category>();
 
         UniqueCodeGenerator UniqueCodeGenerator { get; set; }
+        
 
         private IBrowserFile? selectedFile;
         public string? ErrorMessage;
@@ -147,6 +152,31 @@ namespace FruitSA.Web.Components.Pages
             if (result != null)
             {
                 NavigationManager.NavigateTo("/products");
+            }
+        }
+
+        protected async Task HandleDownloadProducts()
+        {
+            ErrorMessage = "";
+            try
+            {
+                ExcelService excelService = new ExcelService(Products.ToList());
+
+                byte[] excelFile = await excelService.GenerateExcelFileAsync();
+
+                string fileName = "products.xlsx";
+
+                //wwwroot / js / downloadFile.js
+                await Task.Run(async () =>
+                {
+                    await JSRuntime.InvokeVoidAsync("DownloadExcelFile", fileName, excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+                });
+            }
+            catch (Exception)
+            {
+                ErrorMessage = "Failed to download the Products, please contact support or try again later.";
+                return;
             }
         }
 

@@ -8,13 +8,14 @@
 </style>
 <h3>Products</h3>
 
-@* @if (!string.IsNullOrEmpty(successMessage))
+@if (!string.IsNullOrEmpty(ErrorMessage))
 {
-    <p style="color: green;" class="card-text">@sucessMessage</p>
-} *@
+    <p style="color: red;" class="card-text">@ErrorMessage</p>
+}
 <p style="text-align:center;">
     <a href="/add-product" class="btn btn-success"><i class="fas fa-plus-square"></i> ADD</a>
-    <a href="/upload-products" class="btn btn-success"><i class="fas fa-file-excel"></i> UPLOAD</a>
+    <a href="/upload-products" class="btn btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
+    <button onclick="@HandleDownloadProducts" class="btn btn-success"><i class="fas fa-download"></i> DOWNLOAD</button>
 </p>
 
 @if (Products == null)
@@ -81,7 +82,8 @@ else
             <tr>
                 <td colspan="8" style="text-align:center;">
                     <a href="/add-product" class="btn btn-success"><i class="fas fa-plus-square"></i> ADD</a>
-                    <a href="/upload-products" class="btn btn-success"><i class="fas fa-file-excel"></i> UPLOAD</a>
+                    <a href="/upload-products" class="btn btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
+                    <button onclick="@HandleDownloadProducts" class="btn btn-success"><i class="fas fa-download"></i> DOWNLOAD</button>
                 </td>
             </tr>
         </tbody>
