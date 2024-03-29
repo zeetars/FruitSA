@@ -18,29 +18,35 @@ namespace FruitSA.Web.Components.Pages
 
         [Inject]
         IJSRuntime JSRuntime { get; set; }
-
         [Inject]
-        NavigationManager NavigationManager { get; set; }
+        NavigationManager? NavigationManager { get; set; }
         [Inject]
-        public IProductService ProductService { get; set; }
+        public IProductService? ProductService { get; set; }
         public Product Product { get; set; } = new Product();
-        public IEnumerable<Product> Products { get; set; } = Enumerable.Empty<Product>();
+        public IEnumerable<Product> Products { get; set; } = new List<Product>();
 
         [Inject]
-        public ICategoryService CategoryService { get; set; }
-        public IEnumerable<Category> Categories { get; set; } = Enumerable.Empty<Category>();
+        public ICategoryService? CategoryService { get; set; }
+        public IEnumerable<Category> Categories { get; set; } = new List<Category>();
 
-        UniqueCodeGenerator UniqueCodeGenerator { get; set; }
+        UniqueCodeGenerator? UniqueCodeGenerator { get; set; }
         
-
+        //Image Upload data fields
         private IBrowserFile? selectedFile;
         public string? ErrorMessage;
         public string? ProductErrorMessage;
         private long maxFileSize = 1024 * 1024 * 3;
 
+        //Pagination Data fields
+        public int currentPage = 1;
+        public int totalPages = 1;
+        public int pageSize = 10;
+
         protected override async Task OnInitializedAsync()
         {
-            Products = (await ProductService.GetProducts()).ToList();
+
+            await LoadData(); //Loading Paginated Products
+            //Products = (await ProductService.GetProducts()).ToList();
             Categories = (await CategoryService.GetCategories()).ToList();
 
             int.TryParse(Id, out int ProductId);
@@ -68,6 +74,13 @@ namespace FruitSA.Web.Components.Pages
 
         }
 
+        private async Task LoadData()
+        {
+            Products = await ProductService.GetProducts(currentPage, pageSize);
+            totalPages = (int)Math.Ceiling((double)await ProductService.GetProductCount() / pageSize);
+        }
+
+        //Creating a New Product when Id = 0 or Update when Id is > 0, Handling ProductImage Upload
         protected async Task HandleValidSubmit()
         {
             int.TryParse(Id, out int ProductId);
@@ -145,6 +158,8 @@ namespace FruitSA.Web.Components.Pages
                 NavigationManager.NavigateTo("/products");
             }
         }
+
+        //Deleting a Product
         protected async Task HandleProductDelete()
         {
             var result = await ProductService.DeleteProduct(int.Parse(Id));
@@ -155,6 +170,8 @@ namespace FruitSA.Web.Components.Pages
             }
         }
 
+        //Download Products to Excel use the ExcelService class under Providers folder 
+        //OfficeOpenXml
         protected async Task HandleDownloadProducts()
         {
             ErrorMessage = "";
@@ -180,9 +197,28 @@ namespace FruitSA.Web.Components.Pages
             }
         }
 
+        //Handling Pagination
         public void HandleFileChange(InputFileChangeEventArgs e)
         {
             selectedFile = e.File;
+        }
+
+        protected async Task NextPage()
+        {
+            if (currentPage < totalPages)
+            {
+                currentPage++;
+                await LoadData();
+            }
+        }
+
+        protected async Task PreviousPage()
+        {
+            if (currentPage > 1)
+            {
+                currentPage--;
+                await LoadData();
+            }
         }
 
     }

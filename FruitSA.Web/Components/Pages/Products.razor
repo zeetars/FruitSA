@@ -87,6 +87,11 @@ else
                 </td>
             </tr>
         </tbody>
-    </table> 
-   
+    </table>
+
+    <div class="text-center">
+        <button class="btn btn-outline-success" disabled="@(currentPage == 1)" @onclick="PreviousPage" style="width:90px;"><i class="fas fa-angle-double-left"></i> Previous</button>
+        <span>Page @currentPage of @totalPages</span>
+        <button class="btn btn-outline-success" disabled="@(currentPage == totalPages)" @onclick="NextPage" style="width:90px;">Next <i class="fas fa-angle-double-right"></i></button>
+    </div>
 }

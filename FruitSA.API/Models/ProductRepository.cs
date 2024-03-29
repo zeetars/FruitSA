@@ -7,12 +7,19 @@ namespace FruitSA.API.Models
 {
     public class ProductRepository : IProductRepository
     {
+        
         private readonly AppDbContext appDbContext;
 
         public ProductRepository(AppDbContext appDbContext)
         {
             this.appDbContext = appDbContext;
         }
+
+        public async Task<int> GetProductCount()
+        {
+            return await appDbContext.Products.CountAsync();
+        }
+
         public async Task<Product> AddProduct(Product Product)
         {
             
@@ -39,10 +46,17 @@ namespace FruitSA.API.Models
 
         }
 
-        public async Task<IEnumerable<Product>> GetProducts()
+        public async Task<IEnumerable<Product>> GetProducts(int pageNumber, int pageSize)
         {
+
+            //return await appDbContext.Products
+            //    .Include(p => p.Category)
+            //    .ToListAsync();
+
             return await appDbContext.Products
                 .Include(p => p.Category)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
         }
 

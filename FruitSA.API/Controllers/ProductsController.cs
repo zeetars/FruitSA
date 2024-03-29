@@ -1,6 +1,7 @@
 ﻿using FruitSA.API.Models;
 using FruitSA.Model;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 
 namespace FruitSA.API.Controllers
@@ -16,12 +17,28 @@ namespace FruitSA.API.Controllers
             this.productRepository = productRepository;
         }
 
-        [HttpGet]
-        public async Task<ActionResult> GetProducts()
+        [HttpGet("count")]
+        public async Task<ActionResult<int>> GetProductCount()
         {
             try
             {
-                return Ok(await productRepository.GetProducts());
+                var count = await productRepository.GetProductCount();
+                return Ok(count);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error retrieving product count.");
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts(int pageNumber = 1, int pageSize = 10)
+        {
+            try
+            {
+                //return Ok(await productRepository.GetProducts());
+                var products = await productRepository.GetProducts(pageNumber, pageSize);
+                return Ok(products);
             }
             catch (Exception)
             {

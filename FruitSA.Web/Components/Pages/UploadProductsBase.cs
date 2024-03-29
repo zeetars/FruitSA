@@ -18,7 +18,7 @@ namespace FruitSA.Web.Components.Pages
         NavigationManager NavigationManager { get; set; }
         [Inject]
         public IProductService ProductService { get; set; }
-        public IEnumerable<Product> Products { get; set; } = Enumerable.Empty<Product>();
+        //public IEnumerable<Product> Products { get; set; } = Enumerable.Empty<Product>();
 
         UniqueCodeGenerator UniqueCodeGenerator { get; set; }
 
@@ -26,6 +26,8 @@ namespace FruitSA.Web.Components.Pages
         public string? errorMessage;
         public string? successMessage;
 
+        //Upload Excel data to database.
+        //EPPlus.
         protected async Task UploadProducts()
         {        
 
@@ -61,9 +63,10 @@ namespace FruitSA.Web.Components.Pages
 
                                 products.Add(product);
                             }
-                            
+
                             // Add products to the database
-                            Products = await ProductService.CreateProducts(products);
+                            //Products = await ProductService.CreateProducts(products);
+                            await ProductService.CreateProducts(products);
                         }
                     }
 

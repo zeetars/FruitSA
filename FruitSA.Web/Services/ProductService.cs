@@ -13,15 +13,19 @@ namespace FruitSA.Web.Services
         {
             this.httpClient = httpClient;
         }
+        public async Task<int> GetProductCount()
+        {
+            return await httpClient.GetFromJsonAsync<int>("api/products/count");
+        }
 
         public async Task<Product> GetProductById(int productId)
         {
             return await httpClient.GetFromJsonAsync<Product>($"api/products/{productId}");
         }
 
-        public async Task<IEnumerable<Product>> GetProducts()
+        public async Task<IEnumerable<Product>> GetProducts(int pageNumber = 1, int pageSize = 10)
         {
-            return await httpClient.GetFromJsonAsync<Product[]>("api/products");
+            return await httpClient.GetFromJsonAsync<Product[]>($"api/products?pageNumber={pageNumber}&pageSize={pageSize}");
         }
 
         public async Task<Product> UpdateProduct(Product Product)
@@ -67,5 +71,6 @@ namespace FruitSA.Web.Services
             return allProducts;
 
         }
+
     }
 }
