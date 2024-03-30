@@ -1,6 +1,8 @@
 ﻿@page "/categories"
+@using Microsoft.AspNetCore.Authorization
 @inherits CategoriesBase
 @rendermode InteractiveServer
+@attribute [Authorize]
 
 <PageTitle>Fruit SA - Categories</PageTitle>
 <h3>Categories</h3>

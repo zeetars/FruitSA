@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using CurrieTechnologies.Razor.SweetAlert2;
 using FruitSA.Model;
 using FruitSA.Web.Models;
 using FruitSA.Web.Providers;
@@ -18,6 +19,9 @@ namespace FruitSA.Web.Components.Pages
 
         [Inject]
         IJSRuntime JSRuntime { get; set; }
+        [Inject]
+        SweetAlertService Swal {  get; set; }
+
         [Inject]
         NavigationManager? NavigationManager { get; set; }
         [Inject]
@@ -162,7 +166,33 @@ namespace FruitSA.Web.Components.Pages
         //Deleting a Product
         protected async Task HandleProductDelete()
         {
-            var result = await ProductService.DeleteProduct(int.Parse(Id));
+            //wait JSRuntime.InvokeVoidAsync("refreshPage" );
+            SweetAlertResult confirmDelete = await Swal.FireAsync(new SweetAlertOptions
+                {
+                    Title = "Confirm Delete.",
+                    Text = "Do you really want to Delete this Product?",
+                    Icon = SweetAlertIcon.Warning,
+                    ShowCancelButton = true,
+                    ConfirmButtonText = "Delete",
+                    CancelButtonText = "Cancel"
+
+                });
+           
+            
+            
+
+            Product result = null;
+            if (!string.IsNullOrEmpty(confirmDelete.Value))
+            {
+                result = await ProductService.DeleteProduct(int.Parse(Id));
+
+                await Swal.FireAsync(
+                  "Deleted",
+                  $"The Product ({result.Name}) was successfully Deleted.",
+                  SweetAlertIcon.Success
+                  );
+            }
+            //var result = await ProductService.DeleteProduct(int.Parse(Id));
 
             if (result != null)
             {
@@ -183,7 +213,7 @@ namespace FruitSA.Web.Components.Pages
 
                 string fileName = "products.xlsx";
 
-                //wwwroot / js / downloadFile.js
+                //wwwroot / js / downloads.js
                 await Task.Run(async () =>
                 {
                     await JSRuntime.InvokeVoidAsync("DownloadExcelFile", fileName, excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");

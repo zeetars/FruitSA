@@ -1,6 +1,9 @@
 ﻿@page "/products"
+@using Microsoft.AspNetCore.Authorization
 @inherits ProductsBase
 @rendermode InteractiveServer
+@inject IJSRuntime JSRuntime
+@attribute [Authorize]
 
 <PageTitle>Fruit SA - Products</PageTitle>
 <style>
@@ -65,7 +68,9 @@ else
             {
 
                 <tr>
-                    <td><img src="@($"images/{@product.Image}")" width="80px" height="80px"/></td>
+                    <td>                      
+                        <a href="@($"edit-product/{@product.ProductId}")"><img src="@($"/images/{product.Image}")" width="80px" height="80px" /></a>
+                    </td>
                     <td>@product.ProductCode</td>
                     <td>@product.Name</td>
                     <td>@product.Description</td>
@@ -90,8 +95,15 @@ else
     </table>
 
     <div class="text-center">
-        <button class="btn btn-outline-success" disabled="@(currentPage == 1)" @onclick="PreviousPage" style="width:90px;"><i class="fas fa-angle-double-left"></i> Previous</button>
+        <button class="btn btn-outline-success" disabled="@(currentPage == 1)" @onclick="PreviousPage" style="min-width:90px;"><i class="fas fa-angle-double-left"></i> Previous</button>
         <span>Page @currentPage of @totalPages</span>
-        <button class="btn btn-outline-success" disabled="@(currentPage == totalPages)" @onclick="NextPage" style="width:90px;">Next <i class="fas fa-angle-double-right"></i></button>
+        <button class="btn btn-outline-success" disabled="@(currentPage == totalPages)" @onclick="NextPage" style="min-width:90px;">Next <i class="fas fa-angle-double-right"></i></button>
     </div>
+
 }
+@* <script>
+    while (true) {
+        location.reload();
+        break;
+    }  
+ </script> *@

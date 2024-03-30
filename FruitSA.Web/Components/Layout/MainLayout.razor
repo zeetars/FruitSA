@@ -1,5 +1,10 @@
 ﻿@inherits LayoutComponentBase
-
+@using Microsoft.AspNetCore.Components.Authorization
+<style>
+    .top-row i{
+        margin-left:10px;
+    }
+</style>
 <div class="page">
     <div class="sidebar">
         <NavMenu />
@@ -7,7 +12,15 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+            <CascadingAuthenticationState>
+                <AuthorizeView>
+                    <i class="fas fa-circle" style="color:green; margin-right:10px;"></i> @context.User.Identity.Name
+                </AuthorizeView>
+            </CascadingAuthenticationState>
+            <i class="fab fa-facebook-f"></i>
+            <i class="fab fa-twitter"></i>
+            <i class="fab fa-whatsapp"></i>
+            <i class="fab fa-telegram"></i>
         </div>
 
         <article class="content px-4">
