@@ -8,78 +8,102 @@
 @attribute [Authorize]
 
 <PageTitle>Fruit SA - Products</PageTitle>
-@if(Id==null)
-{
-    <h3>Add Product</h3>
-}
-else
-{
-    <h3>Edit Product</h3>
-}
+
 
 @if (Product != null)
 {
-    <EditForm Model="@Product" OnValidSubmit="HandleValidSubmit" FormName="AddForm" onload="refreshPage()">
-        <DataAnnotationsValidator />
-        <input type="hidden" id="productId" @bind="Product.ProductId">
-        <div class="form-group">
-            <label for="productCode">Product Code:</label>
-            <InputText id="productCode" @bind-Value="Product.ProductCode" class="form-control" readonly/>
-            <ValidationMessage For="@(() => Product.ProductCode)" />
-        </div>
-
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <InputText id="name" @bind-Value="Product.Name" class="form-control" />
-            <ValidationMessage For="@(() => Product.Name)" />
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <InputText id="description" @bind-Value="Product.Description" class="form-control" />
-            <ValidationMessage For="@(() => Product.Description)" />
-        </div>
-
-        <div class="form-group">
-            <label for="category">Category:</label>
-            <InputSelect id="category" @bind-Value="Product.CategoryId" class="form-control">
-                <option value="">Select Category</option>
-                @foreach (var category in Categories)
-                {
-                    <option value="@category.CategoryId">@category.Name</option>
-                }
-            </InputSelect>
-            @if (!string.IsNullOrEmpty(ProductErrorMessage))
-            {
-                <p style="color: red;">@ProductErrorMessage</p>
-            }
-        </div>
-
-        <div class="form-group">
-            <label for="price">Price (R):</label>
-            <InputNumber id="price" @bind-Value="Product.Price" class="form-control" />
-            <ValidationMessage For="@(() => Product.Price)" />
-        </div>
-
-       
+    
+    <div class="row justify-content-center m-3">
         
-          <div class="form-group">
-                <label for="image">Image:</label>
-                <InputFile OnChange="@HandleFileChange" id="image" accept=".jpg,.jpeg,.png" />
-                @if (!string.IsNullOrEmpty(ErrorMessage))
-                {
-                    <p style="color: red;">@ErrorMessage</p>
-                }
-            </div>
-        @if (Id == null)
-        {
-            <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-plus-square"></i> Add Product</button>
-        }
-        else
-        {
-            <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-edit"></i>Save Product</button>
-            <button type="button" onclick="@HandleProductDelete" style="margin-top:20px;" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
-        }
+        <div class="col-md-8">
+        <EditForm Model="@Product" OnValidSubmit="HandleValidSubmit" FormName="AddForm" onload="refreshPage()">
+            
+            <input type="hidden" id="productId" @bind="Product.ProductId">
+            <div class="card m-3" style="min-width:18rem; max-width:28rem;">
 
-    </EditForm>
+                <img class="card-img-top imageThumbnail" src="@($"images/{Product.Image}")" style="margin-top:10px;" />
+
+                <div class="card-body">
+                    
+
+                        @if (Id == null)
+                        {
+                            <h4 style="text-align:center;">Add Product</h4>
+                        }
+                        else
+                        {
+                            <h4 style="text-align:center;">Edit @Product.Name</h4>
+                        }
+                    <DataAnnotationsValidator />
+                   
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <label for="productCode">Product Code:</label>
+                        <InputText id="productCode" @bind-Value="Product.ProductCode" class="form-control" readonly />
+                        <ValidationMessage For="@(() => Product.ProductCode)" />
+                    </li>
+                    <li class="list-group-item">
+                        <label for="name">Name:</label>
+                        <InputText id="name" @bind-Value="Product.Name" class="form-control" />
+                        <ValidationMessage For="@(() => Product.Name)" />
+                    </li>
+                    <li class="list-group-item">
+                        <label for="description">Description:</label>
+                        <InputText id="description" @bind-Value="Product.Description" class="form-control" />
+
+                        <ValidationMessage For="@(() => Product.Description)" />
+                    </li>
+                    
+                    <li class="list-group-item">
+                        <label for="category">Category:</label>
+                        <InputSelect id="category" @bind-Value="Product.CategoryId" class="form-control">
+                            <option value="">Select Category</option>
+                            @foreach (var category in Categories)
+                            {
+                                <option value="@category.CategoryId">@category.Name</option>
+                            }
+                        </InputSelect>
+                        @if (!string.IsNullOrEmpty(ProductErrorMessage))
+                        {
+                            <p style="color: red;">@ProductErrorMessage</p>
+                        }
+                    </li>
+                    <li class="list-group-item">
+                        <label for="price">Price (R):</label>
+                        <InputNumber id="price" @bind-Value="Product.Price" class="form-control" />
+                        <ValidationMessage For="@(() => Product.Price)" />
+                        @if (!string.IsNullOrEmpty(PriceErrorMessage))
+                        {
+                            <p style="color: red;">@PriceErrorMessage</p>
+                        }
+                    </li>
+                    <li class="list-group-item">
+                        <label for="image">Upload Image:</label>
+                        <InputFile OnChange="@HandleFileChange" id="image" accept=".jpg,.jpeg,.png" />
+                        @if (!string.IsNullOrEmpty(ErrorMessage))
+                        {
+                            <p style="color: red;">@ErrorMessage</p>
+                        }
+                            
+                    </li>
+                 
+                </ul>
+                <div class="card-body text-center">
+                    @if (Id == null)
+                    {
+                        <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-plus-square"></i> Add Product</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-edit"></i>Save Product</button>
+                        <button type="button" onclick="@HandleProductDelete" style="margin-top:20px;" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+                    }
+                </div>
+            </div>
+
+
+        </EditForm>
+        </div>
+    </div>
 }

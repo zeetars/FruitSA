@@ -5,9 +5,12 @@ using FruitSA.Web.Models;
 using FruitSA.Web.Providers;
 using FruitSA.Web.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
+using System.Drawing;
 using System.IO;
+using System.Net;
 
 namespace FruitSA.Web.Components.Pages
 {
@@ -33,11 +36,14 @@ namespace FruitSA.Web.Components.Pages
         public ICategoryService? CategoryService { get; set; }
         public IEnumerable<Category> Categories { get; set; } = new List<Category>();
 
+        [CascadingParameter]
+        public Task<AuthenticationState> authStateTask { get; set; } 
         UniqueCodeGenerator? UniqueCodeGenerator { get; set; }
         
         //Image Upload data fields
         private IBrowserFile? selectedFile;
         public string? ErrorMessage;
+        public string? PriceErrorMessage;
         public string? ProductErrorMessage;
         private long maxFileSize = 1024 * 1024 * 3;
 
@@ -48,6 +54,11 @@ namespace FruitSA.Web.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            //var authState = await authStateTask;
+            //if (!authState.User.Identity.IsAuthenticated)
+            //{
+            //    NavigationManager.NavigateTo("/identity/account/login");
+            //}
 
             await LoadData(); //Loading Paginated Products
             //Products = (await ProductService.GetProducts()).ToList();
@@ -91,9 +102,15 @@ namespace FruitSA.Web.Components.Pages
 
             ErrorMessage = "";
             ProductErrorMessage = "";
+            PriceErrorMessage = "";
             if (Product.CategoryId == 0)
             {
                 ProductErrorMessage = "Select the Product Category.";
+                return;
+            }
+            if (Product.Price == 0)
+            {
+                PriceErrorMessage = "The Product Price is required.";
                 return;
             }
             if (selectedFile != null)
@@ -166,33 +183,8 @@ namespace FruitSA.Web.Components.Pages
         //Deleting a Product
         protected async Task HandleProductDelete()
         {
-            //wait JSRuntime.InvokeVoidAsync("refreshPage" );
-            SweetAlertResult confirmDelete = await Swal.FireAsync(new SweetAlertOptions
-                {
-                    Title = "Confirm Delete.",
-                    Text = "Do you really want to Delete this Product?",
-                    Icon = SweetAlertIcon.Warning,
-                    ShowCancelButton = true,
-                    ConfirmButtonText = "Delete",
-                    CancelButtonText = "Cancel"
-
-                });
            
-            
-            
-
-            Product result = null;
-            if (!string.IsNullOrEmpty(confirmDelete.Value))
-            {
-                result = await ProductService.DeleteProduct(int.Parse(Id));
-
-                await Swal.FireAsync(
-                  "Deleted",
-                  $"The Product ({result.Name}) was successfully Deleted.",
-                  SweetAlertIcon.Success
-                  );
-            }
-            //var result = await ProductService.DeleteProduct(int.Parse(Id));
+            var result = await ProductService.DeleteProduct(int.Parse(Id));
 
             if (result != null)
             {

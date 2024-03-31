@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using CurrieTechnologies.Razor.SweetAlert2;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Server;
+using Blazored.Modal;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("FruitSAWebContextConnection") ?? throw new InvalidOperationException("Connection string 'FruitSAWebContextConnection' not found.");
@@ -34,6 +35,7 @@ builder.Services.AddAutoMapper(typeof(Mapping));
 builder.Services.AddAuthentication("Identity.Application").AddCookie();
 builder.Services.AddRazorPages();
 builder.Services.AddSweetAlert2();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

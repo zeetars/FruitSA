@@ -40,21 +40,27 @@ namespace FruitSA.Web.Components.Pages
             int.TryParse(Id, out int CategoryId);
             
             Category result = null;
-            if (CategoryId != 0)
-            {
 
-                result = await CategoryService.UpdateCategory(Category);
-
-            }
-            else
+            errorMessage = "";
+            var uniqueCode = Category.CategoryCode.ToUpper();
+            if (uniqueCode != null)
             {
-                errorMessage = "";
-                var uniqueCode = Category.CategoryCode.ToUpper();
-                if (uniqueCode != null)
+                bool isValide;
+                var notAvailable = Categories.FirstOrDefault(c => c.CategoryCode == uniqueCode);
+                if (notAvailable == null)
                 {
-                    bool isValide;
-                    var notAvailable = Categories.FirstOrDefault(c => c.CategoryCode == uniqueCode);
-                    if (notAvailable == null)
+                    isValide = UniqueCodeValidator.Validate(uniqueCode);
+                    if (!isValide)
+                    {
+                        errorMessage = "Category Code is required in the format ABC123.";
+                        return;
+                    }
+
+                    Category.CategoryCode = uniqueCode;
+                }
+                else
+                {
+                    if (Category.CategoryId != 0 )
                     {
                         isValide = UniqueCodeValidator.Validate(uniqueCode);
                         if (!isValide)
@@ -65,17 +71,24 @@ namespace FruitSA.Web.Components.Pages
 
                         Category.CategoryCode = uniqueCode;
                     }
-                    else 
-                    {
-                        errorMessage = "Category Code already assigned to another Category.";
-                        return;
-                    }
-                }
-                else
-                {
-                    errorMessage = "Category Code is required in the format ABC123.";
+                    errorMessage = "Category Code already assigned to another Category.";
                     return;
                 }
+            }
+            else
+            {
+                errorMessage = "Category Code is required in the format ABC123.";
+                return;
+            }
+
+            if (CategoryId != 0)
+            {
+
+                result = await CategoryService.UpdateCategory(Category);
+
+            }
+            else
+            {                
 
                 result = await CategoryService.CreateCategory(Category);
             }
