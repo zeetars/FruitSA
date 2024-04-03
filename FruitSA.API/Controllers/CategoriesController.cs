@@ -1,11 +1,13 @@
 ﻿using FruitSA.API.Models;
 using FruitSA.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FruitSA.API.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]    
+    [ApiController]
+    //[Authorize]
     public class CategoriesController : ControllerBase
     {
         private readonly ICategoryRepository categoryRepository;
@@ -86,24 +88,5 @@ namespace FruitSA.API.Controllers
             }
         }
 
-        //[HttpDelete("{id:int}")]
-        //public async Task<ActionResult<Category>> DeleteCategory(int id)
-        //{
-        //    try
-        //    {
-        //        var categoryToDelete = await categoryRepository.GetCategoryById(id);
-        //        if (categoryToDelete == null)
-        //        {
-        //            return NotFound($"You cannot delete Category with ID: {id}");
-        //        }
-
-        //        return await categoryRepository.DeleteCategory(id);
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return StatusCode(StatusCodes.Status500InternalServerError, $"You cannot delete Category with ID: {id}");
-
-        //    }
-        //}
     }
 }

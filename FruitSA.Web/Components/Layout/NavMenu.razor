@@ -1,4 +1,8 @@
-﻿@using Microsoft.AspNetCore.Components.Authorization
+﻿@using FruitSA.Web.Components.Pages
+@using FruitSA.Web.Providers
+@using Microsoft.AspNetCore.Components.Authorization
+@inherits LoginBase
+
 <style>
     .nav-link span{
         margin-right:5px;
@@ -14,45 +18,44 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
-        <CascadingAuthenticationState>
-        <AuthorizeView>
-            <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                        <span class="fas fa-home" aria-hidden="true"></span> Home
-                    </NavLink>
-                </div>
+        
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                <span class="fas fa-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="@($"/products")" Match="NavLinkMatch.All">
+                <span class="fas fa-cubes" aria-hidden="true"></span> Products
+            </NavLink>
+        </div>
+        
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/categories">
+                <span class="fas fa-table" aria-hidden="true"></span> Categories
+            </NavLink>
+        </div>
             
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="/products" Match="NavLinkMatch.All">
-                        <span class="fas fa-cubes" aria-hidden="true"></span> Products
-                    </NavLink>
-                </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="logout">
+                <span class="fas fa-unlock" aria-hidden="true"></span> Logout
+            </NavLink>
+        </div>
+       
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/login">
+                <span class="fas fa-user-lock" aria-hidden="true"></span> Login
+            </NavLink>
 
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="/categories">
-                        <span class="fas fa-table" aria-hidden="true"></span> Categories
-                    </NavLink>
-                </div>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="/register">
+                <span class="fas fa-user-plus" aria-hidden="true"></span> Register
+            </NavLink>
 
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="/Identity/Account/Logout">
-                        <span class="fas fa-unlock" aria-hidden="true"></span> Logout
-                    </NavLink>
-                </div>
-            </Authorized>
-            
-            <NotAuthorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="/Identity/Account/Login">
-                        <span class="fas fa-user-lock" aria-hidden="true"></span> Login
-                    </NavLink>
-
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
-        </CascadingAuthenticationState>
-    </nav>
-    
+        </div>     
+    </nav>    
 </div>
+
 

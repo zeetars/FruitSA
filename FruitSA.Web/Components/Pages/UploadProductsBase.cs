@@ -85,13 +85,6 @@ namespace FruitSA.Web.Components.Pages
                 return;
             }
 
-            //if(successMessage != "")
-            //{
-            //    NavigationManager.NavigateTo("/products");
-            //}
-
-            //return;
-            
         }
       
 

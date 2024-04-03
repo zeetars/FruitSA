@@ -50,10 +50,6 @@ namespace FruitSA.Web.Services
             return createdCategory;
         }
 
-        //public async Task<Category> DeleteCategory(int categoryId)
-        //{
-        //    return await httpClient.DeleteFromJsonAsync<Category>($"api/categories/{categoryId}");
-        //}
 
     }
 }

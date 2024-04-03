@@ -1,9 +1,10 @@
 ﻿using FruitSA.Model;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace FruitSA.API.Models
 {
-    public class AppDbContext:DbContext
+    public class AppDbContext:IdentityDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options):base(options)
         {
@@ -11,10 +12,7 @@ namespace FruitSA.API.Models
         public DbSet<Product> Products { get; set; }
         public DbSet<Category> Categories { get; set; }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
-        //    //Add Seed Data if required.
-        //}
+        public DbSet<AuditLog> AuditLogs { get; set; }
+
     }
 }

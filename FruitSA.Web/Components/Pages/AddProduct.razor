@@ -5,63 +5,68 @@
 @using System.IO
 @using Microsoft.AspNetCore.Authorization
 @inherits ProductsBase
-@attribute [Authorize]
+
 
 <PageTitle>Fruit SA - Products</PageTitle>
 
 
-@if (Product != null)
+@if (ProductModel != null)
 {
     
     <div class="row justify-content-center m-3">
         
         <div class="col-md-8">
-        <EditForm Model="@Product" OnValidSubmit="HandleValidSubmit" FormName="AddForm" onload="refreshPage()">
+        <EditForm Model="@ProductModel" OnValidSubmit="HandleValidSubmit" FormName="AddForm" onload="refreshPage()">
             
-            <input type="hidden" id="productId" @bind="Product.ProductId">
+            <input type="hidden" id="productId" @bind="ProductModel.ProductId">
             <div class="card m-3" style="min-width:18rem; max-width:28rem;">
-
-                <img class="card-img-top imageThumbnail" src="@($"images/{Product.Image}")" style="margin-top:10px;" />
+                @if(Id == null)
+                {                   
+                    <img class="card-img-top imageThumbnail" src="images/default-image.jpg" style="margin-top:10px;" />
+                }
+                else
+                {
+                    <img class="card-img-top imageThumbnail" src="@($"images/{ProductModel.Image}")" style="margin-top:10px;" />
+                }
 
                 <div class="card-body">
-                    
 
-                        @if (Id == null)
-                        {
-                            <h4 style="text-align:center;">Add Product</h4>
-                        }
-                        else
-                        {
-                            <h4 style="text-align:center;">Edit @Product.Name</h4>
-                        }
+                    @if (Id == null)
+                    {
+                        <h4 style="text-align:center;">Add Product</h4>
+                    }
+                    else
+                    {
+                        <h4 style="text-align:center;">Edit @ProductModel.Name</h4>
+                    }
                     <DataAnnotationsValidator />
                    
                 </div>
                 <ul class="list-group list-group-flush">
                     <li class="list-group-item">
                         <label for="productCode">Product Code:</label>
-                        <InputText id="productCode" @bind-Value="Product.ProductCode" class="form-control" readonly />
-                        <ValidationMessage For="@(() => Product.ProductCode)" />
+                        <InputText id="productCode" @bind-Value="ProductModel.ProductCode" class="form-control" readonly />
+                        <ValidationMessage For="@(() => ProductModel.ProductCode)" />
                     </li>
                     <li class="list-group-item">
                         <label for="name">Name:</label>
-                        <InputText id="name" @bind-Value="Product.Name" class="form-control" />
-                        <ValidationMessage For="@(() => Product.Name)" />
+                        <InputText id="name" @bind-Value="ProductModel.Name" class="form-control" />
+                        <ValidationMessage For="@(() => ProductModel.Name)" />
                     </li>
                     <li class="list-group-item">
                         <label for="description">Description:</label>
-                        <InputText id="description" @bind-Value="Product.Description" class="form-control" />
+                        <InputText id="description" @bind-Value="ProductModel.Description" class="form-control" />
 
-                        <ValidationMessage For="@(() => Product.Description)" />
+                        <ValidationMessage For="@(() => ProductModel.Description)" />
                     </li>
                     
                     <li class="list-group-item">
                         <label for="category">Category:</label>
-                        <InputSelect id="category" @bind-Value="Product.CategoryId" class="form-control">
+                        <InputSelect id="category" @bind-Value="ProductModel.CategoryName" class="form-control">
                             <option value="">Select Category</option>
                             @foreach (var category in Categories)
                             {
-                                <option value="@category.CategoryId">@category.Name</option>
+                                <option value="@category.Name">@category.Name</option>
                             }
                         </InputSelect>
                         @if (!string.IsNullOrEmpty(ProductErrorMessage))
@@ -71,8 +76,8 @@
                     </li>
                     <li class="list-group-item">
                         <label for="price">Price (R):</label>
-                        <InputNumber id="price" @bind-Value="Product.Price" class="form-control" />
-                        <ValidationMessage For="@(() => Product.Price)" />
+                        <InputNumber id="price" @bind-Value="ProductModel.Price" class="form-control" />
+                        <ValidationMessage For="@(() => ProductModel.Price)" />
                         @if (!string.IsNullOrEmpty(PriceErrorMessage))
                         {
                             <p style="color: red;">@PriceErrorMessage</p>

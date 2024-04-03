@@ -1,13 +1,15 @@
 ﻿using FruitSA.API.Models;
 using FruitSA.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 
 namespace FruitSA.API.Controllers
-{
+{    
     [Route("api/[controller]")]
-    [ApiController]    
+    [ApiController]
+   //[Authorize]
     public class ProductsController:ControllerBase
     {
         private readonly IProductRepository productRepository;
@@ -17,6 +19,7 @@ namespace FruitSA.API.Controllers
             this.productRepository = productRepository;
         }
 
+        //Return count of products used for pagination
         [HttpGet("count")]
         public async Task<ActionResult<int>> GetProductCount()
         {
@@ -31,7 +34,22 @@ namespace FruitSA.API.Controllers
             }
         }
 
-        [HttpGet]
+        //Used to Check if the generated 
+        [HttpGet("{productCode}")]
+        public async Task<ActionResult<bool>> GetProductByCode(string productCode)
+        {
+            try
+            {
+                var result = await productRepository.GetProductByCode(productCode);
+                return Ok(result);
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, "Error checking product code.");
+            }
+        }
+
+        [HttpGet]       
         public async Task<ActionResult<IEnumerable<Product>>> GetProducts(int pageNumber = 1, int pageSize = 10)
         {
             try

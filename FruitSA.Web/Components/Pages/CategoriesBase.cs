@@ -24,17 +24,29 @@ namespace FruitSA.Web.Components.Pages
         public string? errorMessage;
         protected override async Task OnInitializedAsync()
         {
-            Categories = (await CategoryService.GetCategories()).ToList();
-
-            int.TryParse(Id, out int CategoryId);
-            if (CategoryId != 0)
+            errorMessage = "";
+            try
             {
-                Category = await CategoryService.GetCategoryById(CategoryId);
-               
-            }          
+                Categories = (await CategoryService.GetCategories()).ToList();
+
+                int.TryParse(Id, out int CategoryId);
+                if (CategoryId != 0)
+                {
+                    Category = await CategoryService.GetCategoryById(CategoryId);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return;
+            }
+                     
 
         }
 
+        //Add a Category and Validate the uniqueCode to meet the RegEx Partten @"^[A-Za-z]{3}\d{3}$"
+        
         protected async Task HandleValidSubmit()
         {
             int.TryParse(Id, out int CategoryId);
@@ -43,6 +55,7 @@ namespace FruitSA.Web.Components.Pages
 
             errorMessage = "";
             var uniqueCode = Category.CategoryCode.ToUpper();
+
             if (uniqueCode != null)
             {
                 bool isValide;
@@ -81,18 +94,27 @@ namespace FruitSA.Web.Components.Pages
                 return;
             }
 
-            if (CategoryId != 0)
+            try
             {
+                if (CategoryId != 0)
+                {
 
-                result = await CategoryService.UpdateCategory(Category);
+                    result = await CategoryService.UpdateCategory(Category);
+
+                }
+                else
+                {
+
+                    result = await CategoryService.CreateCategory(Category);
+                }
 
             }
-            else
-            {                
-
-                result = await CategoryService.CreateCategory(Category);
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return;
             }
-
+            
             if (result != null)
             {
                 NavigationManager.NavigateTo("/categories");

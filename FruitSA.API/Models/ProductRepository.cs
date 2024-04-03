@@ -2,6 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using AutoMapper;
+using FruitSA.API.Mappers;
 
 namespace FruitSA.API.Models
 {
@@ -10,14 +12,28 @@ namespace FruitSA.API.Models
         
         private readonly AppDbContext appDbContext;
 
-        public ProductRepository(AppDbContext appDbContext)
+        public IMapper Mapper { get; set; }
+
+        public ProductRepository(AppDbContext appDbContext, IMapper Mapper)
         {
             this.appDbContext = appDbContext;
+            this.Mapper = Mapper;
         }
 
         public async Task<int> GetProductCount()
         {
             return await appDbContext.Products.CountAsync();
+        }
+
+        public async Task<bool> GetProductByCode(string productCode)
+        {
+            var result =  await appDbContext.Products.FirstOrDefaultAsync(p => p.ProductCode == productCode);
+            if (result == null) 
+            {
+                return false;
+            }
+
+            return true;
         }
 
         public async Task<Product> AddProduct(Product Product)
@@ -62,15 +78,19 @@ namespace FruitSA.API.Models
 
         public async Task<Product> UpdateProduct(Product Product)
         {
+            
             var result = await appDbContext.Products.FirstOrDefaultAsync(p => p.ProductId == Product.ProductId);
             if(result != null)
             {
+               
                 result.ProductCode = Product.ProductCode;
                 result.Name = Product.Name;
                 result.Description = Product.Description;
                 result.CategoryId = Product.CategoryId;
                 result.Price = Product.Price;
                 result.Image = Product.Image;
+
+                //result = Mapper.Map(Product, result);
 
                 await appDbContext.SaveChangesAsync();
                 return result;

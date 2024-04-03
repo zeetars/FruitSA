@@ -29,8 +29,11 @@ namespace FruitSA.Web.Components.Pages
         NavigationManager? NavigationManager { get; set; }
         [Inject]
         public IProductService? ProductService { get; set; }
+        [Inject]
+        public IMapper Mapper { get; set; }
         public Product Product { get; set; } = new Product();
         public IEnumerable<Product> Products { get; set; } = new List<Product>();
+        public AddProductModel ProductModel { get; set; } = new AddProductModel();
 
         [Inject]
         public ICategoryService? CategoryService { get; set; }
@@ -54,52 +57,64 @@ namespace FruitSA.Web.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            //var authState = await authStateTask;
-            //if (!authState.User.Identity.IsAuthenticated)
-            //{
-            //    NavigationManager.NavigateTo("/identity/account/login");
-            //}
 
-            await LoadData(); //Loading Paginated Products
-            //Products = (await ProductService.GetProducts()).ToList();
-            Categories = (await CategoryService.GetCategories()).ToList();
+            ErrorMessage = "";
+            try
+            {
+                //Loading Paginated Products  
+                await LoadData();           
+                Categories = (await CategoryService.GetCategories()).ToList();
+            }
+            catch (Exception ex)
+            {
+                ErrorMessage = $"Error retrieving Data: {@ex.Message}";
+                return;
+            }
 
+            //If an Id is send via GET retrieve the product
+            //else generate a uniqueCode before display the AddProduct form.
             int.TryParse(Id, out int ProductId);
             if (ProductId != 0)
             {
                 Product = await ProductService.GetProductById(ProductId);
+                Mapper.Map(Product, ProductModel);
                 CategoryName = Product.Category.Name;
             }
             else
             {
-               var uniqueCode = UniqueCodeGenerator.GenerateUniqueCode();    
+                
+               string uniqueCode = UniqueCodeGenerator.GenerateUniqueCode();    
                if (uniqueCode != null) 
                {
-                    var notAvailable = Products.FirstOrDefault(p => p.ProductCode == uniqueCode);
-                    while(notAvailable != null) 
+                    var codeTaken = await ProductService.GetProductByCode(uniqueCode);
+                    while(codeTaken) 
                     {
                         uniqueCode = UniqueCodeGenerator.GenerateUniqueCode();
-                        notAvailable = Products.FirstOrDefault(p => p.ProductCode == uniqueCode);
+                        codeTaken = await ProductService.GetProductByCode(uniqueCode);
                     }
                }
 
-                Product.ProductCode = uniqueCode;
+                ProductModel.ProductCode = uniqueCode;
 
             }
 
         }
 
+        //GetProducts By set totalPages and pageSize
         private async Task LoadData()
         {
             Products = await ProductService.GetProducts(currentPage, pageSize);
             totalPages = (int)Math.Ceiling((double)await ProductService.GetProductCount() / pageSize);
         }
 
-        //Creating a New Product when Id = 0 or Update when Id is > 0, Handling ProductImage Upload
+        //Creating a New Product If Id = 0
+        //Else Update the product.
+        //Handling ProductImage Upload (Can be utilized as a seperate Provider/Service class)
         protected async Task HandleValidSubmit()
         {
             int.TryParse(Id, out int ProductId);
-
+            Mapper.Map(ProductModel, Product);
+            Product.CategoryId = Categories.FirstOrDefault(c => c.Name == ProductModel.CategoryName).CategoryId;
             ErrorMessage = "";
             ProductErrorMessage = "";
             PriceErrorMessage = "";
@@ -170,7 +185,7 @@ namespace FruitSA.Web.Components.Pages
             }
             else
             {
-                //Product.ProductCode = uniqueProductCode;
+               
                 result = await ProductService.CreateProduct(Product);
             }
 
@@ -219,7 +234,7 @@ namespace FruitSA.Web.Components.Pages
             }
         }
 
-        //Handling Pagination
+        //Handling Pagination, Next and Previous Pages
         public void HandleFileChange(InputFileChangeEventArgs e)
         {
             selectedFile = e.File;

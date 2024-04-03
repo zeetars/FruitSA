@@ -5,6 +5,7 @@ namespace FruitSA.API.Models
     public interface IProductRepository
     {
         Task<int> GetProductCount();
+        Task<bool> GetProductByCode(string productCode);
         Task<IEnumerable<Product>> GetProducts(int pageNumber, int pageSize);        
         Task<Product> GetProductById(int ProductId);
         Task<Product> AddProduct(Product Product);

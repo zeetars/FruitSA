@@ -3,7 +3,7 @@
 @inherits ProductsBase
 @rendermode InteractiveServer
 @inject IJSRuntime JSRuntime
-@attribute [Authorize]
+
 
 <PageTitle>Fruit SA - Products</PageTitle>
 <style>
@@ -16,9 +16,9 @@
     <p style="color: red;" class="card-text">@ErrorMessage</p>
 }
 <p style="text-align:center;">
-    <a href="/add-product" class="btn btn-success"><i class="fas fa-plus-square"></i> ADD</a>
-    <a href="/upload-products" class="btn btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
-    <button onclick="@HandleDownloadProducts" class="btn btn-success"><i class="fas fa-download"></i> DOWNLOAD</button>
+    <a href="/add-product" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
+    <a href="/upload-products" class="btn btn-view btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
+    <button onclick="@HandleDownloadProducts" class="btn btn-view btn-success"><i class="fas fa-download"></i> DOWNLOAD</button>
 </p>
 
 @if (Products == null)
@@ -27,28 +27,7 @@
 }
 else
 {
-    @* <div class="row">
-        @foreach (var product in Products)
-        {            
-            <div class="card col-md-4 col-sm-12 m-1">
-           
-            <img class="card-img-top imageThumbnail" src="@($"images/{@product.Image}")" />
-            <div class="card-body">
-                <h5 class="card-title">@product.Name</h5>
-                <p class="card-text">@product.Description</p>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Category: @product.Category.Name</li>
-                <li class="list-group-item">Code: @product.ProductCode</li>
-                <li class="list-group-item">Price (R): @product.Price</li>
-            </ul>
-                <div class="card-body text-center">
-                <a href="@($"/edit-product/{@product.ProductId}")" class="btn btn-info">Edit</a>
-                
-            </div>
-        </div>
-        }
-    </div> *@
+  
     <table class="table table-success table-striped">
    
         <thead>
@@ -78,7 +57,7 @@ else
                     <td>@product.Price</td>
                     <td>@product.CreatedDate.ToShortDateString()</td>
                     <td>
-                        <a href="@($"/view-product/{product.ProductId}")" class="btn btn-info"><i class="fas fa-info-circle"></i> View</a>
+                        <a href="@($"/view-product/{product.ProductId}")" class="btn btn-view btn-info"><i class="fas fa-info-circle"></i> View</a>
                        
                     </td>
                 </tr>
@@ -86,24 +65,18 @@ else
 
             <tr>
                 <td colspan="8" style="text-align:center;">
-                    <a href="/add-product" class="btn btn-success"><i class="fas fa-plus-square"></i> ADD</a>
-                    <a href="/upload-products" class="btn btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
-                    <button onclick="@HandleDownloadProducts" class="btn btn-success"><i class="fas fa-download"></i> DOWNLOAD</button>
+                    <a href="/add-product" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
+                    <a href="/upload-products" class="btn btn-view btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
+                    <button onclick="@HandleDownloadProducts" class="btn btn-view btn-success"><i class="fas fa-download"></i> DOWNLOAD</button>
                 </td>
             </tr>
         </tbody>
     </table>
 
     <div class="text-center">
-        <button class="btn btn-outline-success" disabled="@(currentPage == 1)" @onclick="PreviousPage" style="min-width:90px;"><i class="fas fa-angle-double-left"></i> Previous</button>
+        <button class="btn btn-viewbtn-outline-success" disabled="@(currentPage == 1)" @onclick="PreviousPage" style="min-width:90px;"><i class="fas fa-angle-double-left"></i> Previous</button>
         <span>Page @currentPage of @totalPages</span>
-        <button class="btn btn-outline-success" disabled="@(currentPage == totalPages)" @onclick="NextPage" style="min-width:90px;">Next <i class="fas fa-angle-double-right"></i></button>
+        <button class="btn btn-view btn-outline-success" disabled="@(currentPage == totalPages)" @onclick="NextPage" style="min-width:90px;">Next <i class="fas fa-angle-double-right"></i></button>
     </div>
 
 }
-@* <script>
-    while (true) {
-        location.reload();
-        break;
-    }  
- </script> *@

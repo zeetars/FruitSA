@@ -8,6 +8,6 @@ namespace FruitSA.Web.Services
         Task<Category> GetCategoryById(int categoryId);
         Task<Category> UpdateCategory(Category Category);
         Task<Category> CreateCategory(Category Category);
-        //Task<Category> DeleteCategory(int categoryId);
+    
     }
 }

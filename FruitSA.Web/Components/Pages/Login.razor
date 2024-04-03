@@ -1,0 +1,45 @@
+﻿@page "/login"
+@rendermode InteractiveServer
+@using System.ComponentModel.DataAnnotations
+@inherits LoginBase
+
+<div class="row justify-content-center m-3">
+    @if (errorMessage != "")
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+        errorMessage = "";
+    }
+    <div class="col-md-8">
+        <EditForm Model="@User" OnValidSubmit="@HandleLogin" FormName="LoginForm">
+            
+            <div class="card m-3" style="min-width:18rem; max-width:28rem;">
+               
+                <div class="card-body">
+                    <h4 style="text-align:center;">LOGIN</h4>                  
+                    <DataAnnotationsValidator />
+                   
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <label for="inputEmail" class="form-label">Email address</label>
+                        <InputText id="inputEmail" class="form-control" @bind-Value="User.Email" />
+                        <ValidationMessage For="@(() => User.Email)" />
+                    </li>
+                    <li class="list-group-item">
+                        <label for="inputPassword" class="form-label">Password</label>
+                        <InputText type="password" id="inputPassword" class="form-control" @bind-Value="User.Password" />
+                        <ValidationMessage For="@(() => User.Password)" />
+                    </li>                 
+
+                </ul>
+                <div class="card-body text-center">
+                    
+                    <button type="submit" class="btn btn-primary" style="min-width:50%;">Login</button><br>
+                    Don't have an account? <a href="#" @onclick="RegisterAccount">Register</a>
+                </div>
+            </div>
+        </EditForm>
+    </div>
+</div>

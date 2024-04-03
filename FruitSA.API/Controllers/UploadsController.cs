@@ -1,11 +1,13 @@
 ﻿using FruitSA.API.Models;
 using FruitSA.Model;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FruitSA.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UploadsController: ControllerBase
     {
         private readonly IUploadRepository uploadRepository;
