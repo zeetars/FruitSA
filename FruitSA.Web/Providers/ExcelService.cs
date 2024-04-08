@@ -1,11 +1,6 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using OfficeOpenXml;
-using Microsoft.EntityFrameworkCore;
+﻿using OfficeOpenXml;
 using FruitSA.Model;
-using FruitSA.Web.Components.Pages;
+
 
 namespace FruitSA.Web.Providers
 {

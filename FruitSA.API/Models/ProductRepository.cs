@@ -1,9 +1,6 @@
 ﻿using FruitSA.Model;
 using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
 using AutoMapper;
-using FruitSA.API.Mappers;
 
 namespace FruitSA.API.Models
 {

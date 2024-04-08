@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace FruitSA.API.Auth.Model
+﻿namespace FruitSA.API.Auth.Model
 {
     public class UserManagerResponse
     {

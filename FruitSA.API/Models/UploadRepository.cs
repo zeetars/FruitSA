@@ -1,5 +1,4 @@
 ﻿using FruitSA.Model;
-using System;
 
 namespace FruitSA.API.Models
 {

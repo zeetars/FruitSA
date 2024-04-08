@@ -10,73 +10,81 @@
     td{vertical-align:middle;}
 </style>
 <h3>Products</h3>
-
-@if (!string.IsNullOrEmpty(ErrorMessage))
+@if (!string.IsNullOrEmpty(LoginBase.authToken))
 {
-    <p style="color: red;" class="card-text">@ErrorMessage</p>
-}
-<p style="text-align:center;">
-    <a href="/add-product" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
-    <a href="/upload-products" class="btn btn-view btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
-    <button onclick="@HandleDownloadProducts" class="btn btn-view btn-success"><i class="fas fa-download"></i> DOWNLOAD</button>
-</p>
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+        <p style="color: red;" class="card-text">@ErrorMessage
+        </p>
+    }
+    <p style="text-align:center;">
+        <a href="/add-product" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
+        <a href="/upload-products" class="btn btn-view btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
+        <button onclick="@HandleDownloadProducts" class="btn btn-view btn-success"><i class="fas fa-download"></i> DOWNLOAD</button>
+    </p>
 
-@if (Products == null)
-{
-    <p><em>Loading...</em></p>
+    @if (Products == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+
+        <table class="table table-success table-striped">
+
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Code:</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Price (R)</th>
+                    <th>Date Created</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var product in Products)
+                {
+
+                    <tr>
+                        <td>                      
+                            <a href="@($"edit-product/{@product.ProductId}")"><img src="@($"/images/{product.Image}")" width="80px" height="80px" /></a>
+                        </td>
+                        <td>@product.ProductCode</td>
+                        <td>@product.Name</td>
+                        <td>@product.Description</td>
+                        <td>@product.Category.Name</td>
+                        <td>@product.Price</td>
+                        <td>@product.CreatedDate.ToShortDateString()</td>
+                        <td>
+                            <a href="@($"/view-product/{product.ProductId}")" class="btn btn-view btn-info"><i class="fas fa-info-circle"></i> View</a>
+
+                        </td>
+                    </tr>
+                }
+
+                <tr>
+                    <td colspan="8" style="text-align:center;">
+                        <a href="/add-product" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
+                        <a href="/upload-products" class="btn btn-view btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
+                        <button onclick="@HandleDownloadProducts" class="btn btn-view btn-success"><i class="fas fa-download"></i> DOWNLOAD</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="text-center">
+            <button class="btn btn-view btn-outline-success" disabled="@(currentPage == 1)" @onclick="PreviousPage" style="min-width:90px;"><i class="fas fa-angle-double-left"></i> Previous</button>
+            <span>Page @currentPage of @totalPages</span>
+            <button class="btn btn-view btn-outline-success" disabled="@(currentPage == totalPages)" @onclick="NextPage" style="min-width:90px;">Next <i class="fas fa-angle-double-right"></i></button>
+        </div>
+    }
+
 }
 else
 {
-  
-    <table class="table table-success table-striped">
-   
-        <thead>
-            <tr>
-                <th></th>
-                <th>Code:</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Category</th>
-                <th>Price (R)</th>
-                <th>Date Created</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var product in Products)
-            {
-
-                <tr>
-                    <td>                      
-                        <a href="@($"edit-product/{@product.ProductId}")"><img src="@($"/images/{product.Image}")" width="80px" height="80px" /></a>
-                    </td>
-                    <td>@product.ProductCode</td>
-                    <td>@product.Name</td>
-                    <td>@product.Description</td>
-                    <td>@product.Category.Name</td>
-                    <td>@product.Price</td>
-                    <td>@product.CreatedDate.ToShortDateString()</td>
-                    <td>
-                        <a href="@($"/view-product/{product.ProductId}")" class="btn btn-view btn-info"><i class="fas fa-info-circle"></i> View</a>
-                       
-                    </td>
-                </tr>
-            }
-
-            <tr>
-                <td colspan="8" style="text-align:center;">
-                    <a href="/add-product" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
-                    <a href="/upload-products" class="btn btn-view btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
-                    <button onclick="@HandleDownloadProducts" class="btn btn-view btn-success"><i class="fas fa-download"></i> DOWNLOAD</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
-    <div class="text-center">
-        <button class="btn btn-viewbtn-outline-success" disabled="@(currentPage == 1)" @onclick="PreviousPage" style="min-width:90px;"><i class="fas fa-angle-double-left"></i> Previous</button>
-        <span>Page @currentPage of @totalPages</span>
-        <button class="btn btn-view btn-outline-success" disabled="@(currentPage == totalPages)" @onclick="NextPage" style="min-width:90px;">Next <i class="fas fa-angle-double-right"></i></button>
-    </div>
-
+    @inject NavigationManager NavigationManager
+    NavigationManager.NavigateTo("/login");
 }

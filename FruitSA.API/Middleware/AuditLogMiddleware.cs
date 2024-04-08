@@ -1,8 +1,7 @@
 ﻿using FruitSA.API.Models;
 using FruitSA.Model;
-using System.Security.Claims;
 using System.Text;
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Linq;
 
 namespace FruitSA.API.Middleware
 {
@@ -12,10 +11,11 @@ namespace FruitSA.API.Middleware
         private const string IdKey = "id";
 
         private readonly RequestDelegate _next;
-
+        private static string userEmail = "";
         public AuditLogMiddleware(RequestDelegate next)
         {
             _next = next;
+
         }
 
         public async Task InvokeAsync(HttpContext httpContext, AppDbContext dbContext)
@@ -30,9 +30,15 @@ namespace FruitSA.API.Middleware
                 var controllerName = (string)(controllerValue ?? string.Empty);
 
                 var changedValue = await GetChangedValues(request).ConfigureAwait(false);
-                //var userEmail = User.FindFirst(ClaimTypes.NameIdentifier);
+                if(controllerName == "Auth")
+                {
+                    dynamic data = JObject.Parse(changedValue);
+                    userEmail = data.Email;
+                }
+               
                 var auditLog = new AuditLog
                 {
+                    UserEmail = userEmail,
                     EntityName = controllerName,
                     Action = request.Method,
                     Timestamp = DateTime.UtcNow,

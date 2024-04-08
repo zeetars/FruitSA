@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CurrieTechnologies.Razor.SweetAlert2;
 using FruitSA.Model;
 using FruitSA.Web.Models;
 using FruitSA.Web.Providers;
@@ -8,9 +7,6 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
-using System.Drawing;
-using System.IO;
-using System.Net;
 
 namespace FruitSA.Web.Components.Pages
 {
@@ -22,9 +18,7 @@ namespace FruitSA.Web.Components.Pages
 
         [Inject]
         IJSRuntime JSRuntime { get; set; }
-        [Inject]
-        SweetAlertService Swal {  get; set; }
-
+      
         [Inject]
         NavigationManager? NavigationManager { get; set; }
         [Inject]
@@ -57,45 +51,47 @@ namespace FruitSA.Web.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            if (LoginBase.authToken != "")
+            {
+                ErrorMessage = "";
+                try
+                {
+                    //Loading Paginated Products  
+                    await LoadData();
+                    Categories = (await CategoryService.GetCategories(LoginBase.authToken)).ToList();
+                }
+                catch (Exception ex)
+                {
+                    ErrorMessage = $"Error retrieving Data: {@ex.Message}";
+                    return;
+                }
 
-            ErrorMessage = "";
-            try
-            {
-                //Loading Paginated Products  
-                await LoadData();           
-                Categories = (await CategoryService.GetCategories()).ToList();
-            }
-            catch (Exception ex)
-            {
-                ErrorMessage = $"Error retrieving Data: {@ex.Message}";
-                return;
-            }
+                //If an Id is send via GET retrieve the product
+                //else generate a uniqueCode before display the AddProduct form.
+                int.TryParse(Id, out int ProductId);
+                if (ProductId != 0)
+                {
+                    Product = await ProductService.GetProductById(LoginBase.authToken, ProductId);
+                    Mapper.Map(Product, ProductModel);
+                    CategoryName = Product.Category.Name;
+                }
+                else
+                {
 
-            //If an Id is send via GET retrieve the product
-            //else generate a uniqueCode before display the AddProduct form.
-            int.TryParse(Id, out int ProductId);
-            if (ProductId != 0)
-            {
-                Product = await ProductService.GetProductById(ProductId);
-                Mapper.Map(Product, ProductModel);
-                CategoryName = Product.Category.Name;
-            }
-            else
-            {
-                
-               string uniqueCode = UniqueCodeGenerator.GenerateUniqueCode();    
-               if (uniqueCode != null) 
-               {
-                    var codeTaken = await ProductService.GetProductByCode(uniqueCode);
-                    while(codeTaken) 
+                    string uniqueCode = UniqueCodeGenerator.GenerateUniqueCode();
+                    if (uniqueCode != null)
                     {
-                        uniqueCode = UniqueCodeGenerator.GenerateUniqueCode();
-                        codeTaken = await ProductService.GetProductByCode(uniqueCode);
+                        var codeTaken = await ProductService.GetProductByCode(LoginBase.authToken, uniqueCode);
+                        while (codeTaken)
+                        {
+                            uniqueCode = UniqueCodeGenerator.GenerateUniqueCode();
+                            codeTaken = await ProductService.GetProductByCode(LoginBase.authToken, uniqueCode);
+                        }
                     }
-               }
 
-                ProductModel.ProductCode = uniqueCode;
+                    ProductModel.ProductCode = uniqueCode;
 
+                }
             }
 
         }
@@ -103,8 +99,8 @@ namespace FruitSA.Web.Components.Pages
         //GetProducts By set totalPages and pageSize
         private async Task LoadData()
         {
-            Products = await ProductService.GetProducts(currentPage, pageSize);
-            totalPages = (int)Math.Ceiling((double)await ProductService.GetProductCount() / pageSize);
+            Products = await ProductService.GetProducts(LoginBase.authToken, currentPage, pageSize);
+            totalPages = (int)Math.Ceiling((double)await ProductService.GetProductCount(LoginBase.authToken) / pageSize);
         }
 
         //Creating a New Product If Id = 0
@@ -180,13 +176,13 @@ namespace FruitSA.Web.Components.Pages
             if (ProductId != 0)
             {
 
-                result = await ProductService.UpdateProduct(Product);
+                result = await ProductService.UpdateProduct(LoginBase.authToken, Product);
 
             }
             else
             {
                
-                result = await ProductService.CreateProduct(Product);
+                result = await ProductService.CreateProduct(LoginBase.authToken, Product);
             }
 
             if (result != null)
@@ -199,7 +195,7 @@ namespace FruitSA.Web.Components.Pages
         protected async Task HandleProductDelete()
         {
            
-            var result = await ProductService.DeleteProduct(int.Parse(Id));
+            var result = await ProductService.DeleteProduct(LoginBase.authToken, int.Parse(Id));
 
             if (result != null)
             {

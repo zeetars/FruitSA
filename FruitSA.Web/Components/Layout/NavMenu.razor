@@ -1,7 +1,7 @@
 ﻿@using FruitSA.Web.Components.Pages
 @using FruitSA.Web.Providers
 @using Microsoft.AspNetCore.Components.Authorization
-@inherits LoginBase
+@rendermode InteractiveServer
 
 <style>
     .nav-link span{
@@ -18,44 +18,55 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="flex-column">
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
-                <span class="fas fa-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="@($"/products")" Match="NavLinkMatch.All">
-                <span class="fas fa-cubes" aria-hidden="true"></span> Products
-            </NavLink>
-        </div>
-        
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/categories">
-                <span class="fas fa-table" aria-hidden="true"></span> Categories
-            </NavLink>
-        </div>
-            
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="logout">
+      
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" @onclick="Home" Match="NavLinkMatch.All">
+                    <span class="fas fa-home" aria-hidden="true"></span> Home
+                </NavLink>
+            </div>
+       
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/products" Match="NavLinkMatch.All">
+                    <span class="fas fa-cubes" aria-hidden="true"></span> Products
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/categories">
+                    <span class="fas fa-table" aria-hidden="true"></span> Categories
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+            <NavLink class="nav-link" @onclick="Logout" style="">
                 <span class="fas fa-unlock" aria-hidden="true"></span> Logout
             </NavLink>
         </div>
-       
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/login">
-                <span class="fas fa-user-lock" aria-hidden="true"></span> Login
-            </NavLink>
-
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="/register">
-                <span class="fas fa-user-plus" aria-hidden="true"></span> Register
-            </NavLink>
-
-        </div>     
+     
     </nav>    
 </div>
+@{
+    @inject NavigationManager NavigationManager;
+   
+    void Logout()
+    {
+        LoginBase.authToken = "";
+        LoginBase.Email = "";
+        
+        NavigationManager.NavigateTo("/login");
 
+    }
 
+    void Home()
+    {
+        
+        if(LoginBase.authToken == "")
+        {
+            NavigationManager.NavigateTo("/");
+        }
+        else
+        {
+            NavigationManager.NavigateTo($"/{ LoginBase.authToken}");
+        }
+    }
+}

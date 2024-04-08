@@ -1,5 +1,7 @@
 ﻿@page "/"
+@page "/{Token}"
 @using FruitSA.Web.Providers
+@using System.IdentityModel.Tokens.Jwt
 @attribute [StreamRendering]
 @inherits LoginBase
 
@@ -8,5 +10,6 @@
     <h1>Welcome to FruitSA</h1>
 
     <p>A collection of Products and their Categories</p>
+  
 </div>
 

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using FruitSA.API.Auth.Model;
+﻿using FruitSA.API.Auth.Model;
 using FruitSA.API.Auth.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
+
 
 namespace FruitSA.API.Auth.Controllers
 {

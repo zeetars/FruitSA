@@ -1,24 +1,11 @@
 using FruitSA.Web.Components;
 using FruitSA.Web.Models;
 using FruitSA.Web.Services;
-
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using CurrieTechnologies.Razor.SweetAlert2;
-using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.Server;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Configuration;
 using FruitSA.Web.Providers;
-using Blazored.Modal;
-
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("FruitSAConnection") ?? throw new InvalidOperationException("Connection string 'FruitSAConnection' not found.");
-
 
 builder.Services.AddControllersWithViews();
 // Add services to the container.
@@ -42,12 +29,9 @@ builder.Services.AddHttpClient<IUserService, UserService>(client =>
     client.BaseAddress = new Uri(builder.Configuration["BaseUrl"]);
 });
 
-
 builder.Services.AddAutoMapper(typeof(Mapping));
 builder.Services.AddAuthentication("Identity.Application").AddCookie();
 builder.Services.AddRazorPages();
-builder.Services.AddSweetAlert2();
-
 
 var app = builder.Build();
 
@@ -65,15 +49,11 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-
 app.UseAntiforgery();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-
 app.MapRazorPages();
-
 app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
-
 app.Run();

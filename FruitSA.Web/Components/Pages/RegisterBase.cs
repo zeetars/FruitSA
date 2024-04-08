@@ -53,9 +53,6 @@ namespace FruitSA.Web.Components.Pages
                 error = "Exception";
                 return;
             }
-
-
-
         }
 
         public void LoginToAccount()

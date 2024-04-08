@@ -1,12 +1,8 @@
-﻿using AutoMapper;
-using FruitSA.Model;
-using FruitSA.Web.Models;
+﻿using FruitSA.Model;
 using FruitSA.Web.Providers;
 using FruitSA.Web.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.EntityFrameworkCore;
-using System.IO;
 
 namespace FruitSA.Web.Components.Pages
 {
@@ -64,9 +60,7 @@ namespace FruitSA.Web.Components.Pages
                                 products.Add(product);
                             }
 
-                            // Add products to the database
-                            //Products = await ProductService.CreateProducts(products);
-                            await ProductService.CreateProducts(products);
+                            await ProductService.CreateProducts(LoginBase.authToken,products);
                         }
                     }
 
@@ -85,8 +79,7 @@ namespace FruitSA.Web.Components.Pages
                 return;
             }
 
-        }
-      
+        }      
 
         public void HandleFileChange(InputFileChangeEventArgs e)
         {

@@ -2,14 +2,12 @@
 using FruitSA.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System;
 
 namespace FruitSA.API.Controllers
 {    
     [Route("api/[controller]")]
     [ApiController]
-   //[Authorize]
+   [Authorize]
     public class ProductsController:ControllerBase
     {
         private readonly IProductRepository productRepository;

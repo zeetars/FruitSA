@@ -1,4 +1,3 @@
-
 using FruitSA.API.Auth.Services;
 using FruitSA.API.Middleware;
 using FruitSA.API.Models;
@@ -6,9 +5,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using System.Linq;
 using System.Text;
-using AutoMapper;
 using FruitSA.API.Mappers;
 
 

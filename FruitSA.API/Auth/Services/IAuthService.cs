@@ -1,16 +1,10 @@
 ﻿using FruitSA.API.Auth.Model;
-using FruitSA.Model;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace FruitSA.API.Auth.Services
 {
@@ -127,7 +121,7 @@ namespace FruitSA.API.Auth.Services
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddDays(30),
+                expires: DateTime.Now.AddSeconds(30),
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256));
 
             string tokenAsString = new JwtSecurityTokenHandler().WriteToken(token);

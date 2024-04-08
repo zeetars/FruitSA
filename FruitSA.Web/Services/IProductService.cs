@@ -4,14 +4,14 @@ namespace FruitSA.Web.Services
 {
     public interface IProductService
     {
-        Task<int> GetProductCount();
-        Task<bool> GetProductByCode(string productCode);
-        Task<IEnumerable<Product>> GetProducts(int pageNumber, int pageSize);
-        Task<IEnumerable<Product>> CreateProducts(List<Product> Products);
-        Task<Product> GetProductById(int productId);
-        Task<Product> UpdateProduct(Product Product);
-        Task<Product> CreateProduct(Product Product);
-        Task<Product> DeleteProduct(int productId);
+        Task<int> GetProductCount(string authToken);
+        Task<bool> GetProductByCode(string authToken,  string productCode);
+        Task<IEnumerable<Product>> GetProducts(string authToken, int pageNumber, int pageSize);
+        Task<IEnumerable<Product>> CreateProducts(string authToken, List<Product> Products);
+        Task<Product> GetProductById(string authToken,  int productId);
+        Task<Product> UpdateProduct(string authToken, Product Product);
+        Task<Product> CreateProduct(string authToken, Product Product);
+        Task<Product> DeleteProduct(string authToken, int productId);
        
     }
 }

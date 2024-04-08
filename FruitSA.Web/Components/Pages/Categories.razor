@@ -3,66 +3,73 @@
 @inherits CategoriesBase
 @rendermode InteractiveServer
 
-
 <PageTitle>Fruit SA - Categories</PageTitle>
 <h3>Categories</h3>
-@if (!string.IsNullOrEmpty(errorMessage))
+@if (!string.IsNullOrEmpty(LoginBase.authToken))
 {
-    <p style="color: red;" class="card-text">@errorMessage</p>
-}
-<p style="text-align:center;"><a href="/add-category" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a></p>
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <p style="color: red;" class="card-text">@errorMessage</p>
+    }
+    <p style="text-align:center;"><a href="/add-category" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a></p>
 
-@if (Categories == null)
-{
-    <p><em>Loading...</em></p>
+    @if (Categories == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table table-success table-striped">
+
+            <thead>
+                <tr>
+
+                    <th>Code:</th>
+                    <th>Name</th>
+                    <th>IsActive</th>
+                    <th>Date Created</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var category in Categories)
+                {
+
+                    <tr>
+
+                        <td>@category.CategoryCode</td>
+                        <td>@category.Name</td>
+                        @if (category.IsActive == 1)
+                        {
+                            <td>Yes</td>
+                        }
+                        else
+                        {
+                            <td>No</td>
+                        }                   
+
+                        <td>@category.CreatedDate.ToShortDateString()</td>
+                        <td>
+                            <a href="@($"/edit-category/{category.CategoryId}")" class="btn btn-view btn-info"><i class="fas fa-edit"></i> Edit</a>
+
+                        </td>
+                    </tr>
+                }
+
+                <tr>
+                    <td colspan="8" style="text-align:center;">
+                        <a href="/add-category" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    }
 }
 else
 {
-    <table class="table table-success table-striped">
-
-        <thead>
-            <tr>
-
-                <th>Code:</th>
-                <th>Name</th>
-                <th>IsActive</th>
-                <th>Date Created</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var category in Categories)
-            {
-
-                <tr>
-
-                    <td>@category.CategoryCode</td>
-                    <td>@category.Name</td>
-                    @if (category.IsActive == 1)
-                    {
-                        <td>Yes</td>
-                    }
-                    else
-                    {
-                        <td>No</td>
-                    }                   
-
-                    <td>@category.CreatedDate.ToShortDateString()</td>
-                    <td>
-                        <a href="@($"/edit-category/{category.CategoryId}")" class="btn btn-view btn-info"><i class="fas fa-edit"></i> Edit</a>
-
-                    </td>
-                </tr>
-            }
-
-            <tr>
-                <td colspan="8" style="text-align:center;">
-                    <a href="/add-category" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-
+    @inject NavigationManager NavigationManager
+    NavigationManager.NavigateTo("/login");
 }
 
 

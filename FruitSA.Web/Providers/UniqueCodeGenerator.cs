@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FruitSA.Web.Providers
+﻿namespace FruitSA.Web.Providers
 {    
     public class UniqueCodeGenerator
     {
