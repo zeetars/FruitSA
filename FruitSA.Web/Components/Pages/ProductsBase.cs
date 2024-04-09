@@ -33,6 +33,7 @@ namespace FruitSA.Web.Components.Pages
         public ICategoryService? CategoryService { get; set; }
         public IEnumerable<Category> Categories { get; set; } = new List<Category>();
 
+        protected ConfirmationBase DeleteConfirmation {  get; set; }
         [CascadingParameter]
         public Task<AuthenticationState> authStateTask { get; set; } 
         UniqueCodeGenerator? UniqueCodeGenerator { get; set; }
@@ -192,16 +193,24 @@ namespace FruitSA.Web.Components.Pages
         }
 
         //Deleting a Product
-        protected async Task HandleProductDelete()
+        protected void HandleProductDelete()
         {
-           
-            var result = await ProductService.DeleteProduct(LoginBase.authToken, int.Parse(Id));
+            DeleteConfirmation.Show();
+        }
 
-            if (result != null)
+        protected async Task ConfirmDelete_CLick(bool deleteConfirmed)
+        {
+            if (deleteConfirmed)
             {
-                NavigationManager.NavigateTo("/products");
+                var result = await ProductService.DeleteProduct(LoginBase.authToken, int.Parse(Id));
+
+                if (result != null)
+                {
+                    NavigationManager.NavigateTo("/products");
+                }
             }
         }
+     
 
         //Download Products to Excel use the ExcelService class under Providers folder 
         //OfficeOpenXml
