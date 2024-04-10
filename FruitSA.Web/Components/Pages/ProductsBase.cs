@@ -4,7 +4,6 @@ using FruitSA.Web.Models;
 using FruitSA.Web.Providers;
 using FruitSA.Web.Services;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 
@@ -13,7 +12,9 @@ namespace FruitSA.Web.Components.Pages
     public class ProductsBase:ComponentBase
     {
         [Parameter]
-        public string? Id { get; set; }
+        public int ProductId { get; set; }
+        [Parameter]
+        public string Token { get; set; } = "";
         public string? CategoryName { get; set; }
 
         [Inject]
@@ -33,9 +34,8 @@ namespace FruitSA.Web.Components.Pages
         public ICategoryService? CategoryService { get; set; }
         public IEnumerable<Category> Categories { get; set; } = new List<Category>();
 
-        protected ConfirmationBase DeleteConfirmation {  get; set; }
-        [CascadingParameter]
-        public Task<AuthenticationState> authStateTask { get; set; } 
+        protected ConfirmationBase Confirmation {  get; set; }
+        
         UniqueCodeGenerator? UniqueCodeGenerator { get; set; }
         
         //Image Upload data fields
@@ -52,14 +52,14 @@ namespace FruitSA.Web.Components.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            if (LoginBase.authToken != "")
+            if (!string.IsNullOrEmpty(Token))
             {
                 ErrorMessage = "";
                 try
                 {
                     //Loading Paginated Products  
                     await LoadData();
-                    Categories = (await CategoryService.GetCategories(LoginBase.authToken)).ToList();
+                    Categories = (await CategoryService.GetCategories(Token)).ToList();
                 }
                 catch (Exception ex)
                 {
@@ -69,10 +69,10 @@ namespace FruitSA.Web.Components.Pages
 
                 //If an Id is send via GET retrieve the product
                 //else generate a uniqueCode before display the AddProduct form.
-                int.TryParse(Id, out int ProductId);
+                
                 if (ProductId != 0)
                 {
-                    Product = await ProductService.GetProductById(LoginBase.authToken, ProductId);
+                    Product = await ProductService.GetProductById(Token, ProductId);
                     Mapper.Map(Product, ProductModel);
                     CategoryName = Product.Category.Name;
                 }
@@ -82,11 +82,11 @@ namespace FruitSA.Web.Components.Pages
                     string uniqueCode = UniqueCodeGenerator.GenerateUniqueCode();
                     if (uniqueCode != null)
                     {
-                        var codeTaken = await ProductService.GetProductByCode(LoginBase.authToken, uniqueCode);
+                        var codeTaken = await ProductService.GetProductByCode(Token, uniqueCode);
                         while (codeTaken)
                         {
                             uniqueCode = UniqueCodeGenerator.GenerateUniqueCode();
-                            codeTaken = await ProductService.GetProductByCode(LoginBase.authToken, uniqueCode);
+                            codeTaken = await ProductService.GetProductByCode(Token, uniqueCode);
                         }
                     }
 
@@ -100,8 +100,8 @@ namespace FruitSA.Web.Components.Pages
         //GetProducts By set totalPages and pageSize
         private async Task LoadData()
         {
-            Products = await ProductService.GetProducts(LoginBase.authToken, currentPage, pageSize);
-            totalPages = (int)Math.Ceiling((double)await ProductService.GetProductCount(LoginBase.authToken) / pageSize);
+            Products = await ProductService.GetProducts(Token, currentPage, pageSize);
+            totalPages = (int)Math.Ceiling((double)await ProductService.GetProductCount(Token) / pageSize);
         }
 
         //Creating a New Product If Id = 0
@@ -109,7 +109,7 @@ namespace FruitSA.Web.Components.Pages
         //Handling ProductImage Upload (Can be utilized as a seperate Provider/Service class)
         protected async Task HandleValidSubmit()
         {
-            int.TryParse(Id, out int ProductId);
+            
             Mapper.Map(ProductModel, Product);
             Product.CategoryId = Categories.FirstOrDefault(c => c.Name == ProductModel.CategoryName).CategoryId;
             ErrorMessage = "";
@@ -177,66 +177,74 @@ namespace FruitSA.Web.Components.Pages
             if (ProductId != 0)
             {
 
-                result = await ProductService.UpdateProduct(LoginBase.authToken, Product);
+                result = await ProductService.UpdateProduct(Token, Product);
 
             }
             else
             {
                
-                result = await ProductService.CreateProduct(LoginBase.authToken, Product);
+                result = await ProductService.CreateProduct(Token, Product);
             }
 
             if (result != null)
             {
-                NavigationManager.NavigateTo("/products");
+                NavigationManager.NavigateTo($"/products/{Token}");
             }
         }
 
         //Deleting a Product
         protected void HandleProductDelete()
         {
-            DeleteConfirmation.Show();
+            Confirmation.Show();
         }
 
         protected async Task ConfirmDelete_CLick(bool deleteConfirmed)
         {
             if (deleteConfirmed)
             {
-                var result = await ProductService.DeleteProduct(LoginBase.authToken, int.Parse(Id));
+                var result = await ProductService.DeleteProduct(Token, ProductId);
 
                 if (result != null)
                 {
-                    NavigationManager.NavigateTo("/products");
+                    NavigationManager.NavigateTo($"/products/{Token}");
                 }
             }
         }
-     
+
+        protected void HandleDownloadProducts()
+        {
+            Confirmation.Show();
+        }
 
         //Download Products to Excel use the ExcelService class under Providers folder 
         //OfficeOpenXml
-        protected async Task HandleDownloadProducts()
+        protected async Task ConfirmDownload_CLick(bool downloadConfirmed)
         {
-            ErrorMessage = "";
-            try
+            if (downloadConfirmed)
             {
-                ExcelService excelService = new ExcelService(Products.ToList());
-
-                byte[] excelFile = await excelService.GenerateExcelFileAsync();
-
-                string fileName = "products.xlsx";
-
-                //wwwroot / js / downloads.js
-                await Task.Run(async () =>
+                ErrorMessage = "";
+                try
                 {
-                    await JSRuntime.InvokeVoidAsync("DownloadExcelFile", fileName, excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                    ExcelService excelService = new ExcelService(Products.ToList());
 
-                });
+                    byte[] excelFile = await excelService.GenerateExcelFileAsync();
+
+                    string fileName = "products.xlsx";
+
+                    //wwwroot / js / downloads.js
+                    await Task.Run(async () =>
+                    {
+                        await JSRuntime.InvokeVoidAsync("DownloadExcelFile", fileName, excelFile, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+                    });
+                }
+                catch (Exception)
+                {
+                    ErrorMessage = "Failed to download the Products, please contact support or try again later.";
+                    return;
+                }
             }
-            catch (Exception)
-            {
-                ErrorMessage = "Failed to download the Products, please contact support or try again later.";
-                return;
-            }
+            
         }
 
         //Handling Pagination, Next and Previous Pages

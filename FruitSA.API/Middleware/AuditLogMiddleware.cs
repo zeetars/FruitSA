@@ -11,7 +11,7 @@ namespace FruitSA.API.Middleware
         private const string IdKey = "id";
 
         private readonly RequestDelegate _next;
-        private static string userEmail = "";
+        private string userEmail = "";
         public AuditLogMiddleware(RequestDelegate next)
         {
             _next = next;
@@ -30,12 +30,16 @@ namespace FruitSA.API.Middleware
                 var controllerName = (string)(controllerValue ?? string.Empty);
 
                 var changedValue = await GetChangedValues(request).ConfigureAwait(false);
-                if(controllerName == "Auth")
+
+                if(controllerName=="Auth")
                 {
                     dynamic data = JObject.Parse(changedValue);
-                    userEmail = data.Email;
+                    userEmail = data["Email"];
                 }
-               
+                else
+                {
+                    userEmail = httpContext.User.Claims.First(c => c.Type == "Email").Value;
+                }  
                 var auditLog = new AuditLog
                 {
                     UserEmail = userEmail,

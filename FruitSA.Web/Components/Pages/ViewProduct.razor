@@ -1,4 +1,4 @@
-﻿@page "/view-product/{id}"
+﻿@page "/view-product/{ProductId:int}/{Token}"
 @inherits ProductsBase
 @rendermode InteractiveServer
 
@@ -9,14 +9,12 @@
 }
 else
 {
-  
-
     <div class="row justify-content-center m-3">
+        <div class="col-md-8">
+            <div class="card m-3" style="min-width:18rem; max-width:22rem;">
 
-        <div class="card m-3" style="min-width:18rem; max-width:22rem;">
-            
-                <img class="card-img-top imageThumbnail" src="@($"images/{ProductModel.Image}")" style="margin-top:10px;" />
-            
+                <img class="card-img-top imageThumbnail" src="@($"images/{@ProductModel.Image}")" style="margin-top:10px;" />
+           
                 <div class="card-body">
                     <h5 class="card-title">@ProductModel.Name</h5>
                     <p class="card-text">@ProductModel.Description</p>
@@ -27,11 +25,25 @@ else
                     <li class="list-group-item">Price (R): @ProductModel.Price</li>
                 </ul>
                 <div class="card-body text-center">
-                    <a href="@($"/edit-product/{@ProductModel.ProductId}")" class="btn btn-info"><i class="fas fa-edit"></i> Edit</a>
-                <button type="button" @onclick="HandleProductDelete" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+                    <a href="@($"/edit-product/{@ProductModel.ProductId}/{Token}")" class="btn btn-info"><i class="fas fa-edit"></i> Edit</a>
+                    <button type="button" @onclick="HandleProductDelete" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
                 </div>
+            </div>
         </div>
     
     </div>
-    <Confirmation ConfirmationChanged="ConfirmDelete_CLick" @ref = "DeleteConfirmation"></Confirmation>
+    <Confirmation ConfirmationChanged="ConfirmDelete_CLick" @ref = "Confirmation" ConfirmationMessage=@($"Are you sure you want to Delete {@ProductModel.Name}?")></Confirmation>
+}
+@code {
+
+    [CascadingParameter]
+    public EventCallback<string> notifyLayout { get; set; }
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(Token))
+        {
+            notifyLayout.InvokeAsync(Token);
+        }
+
+    }
 }

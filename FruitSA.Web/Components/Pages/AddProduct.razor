@@ -1,111 +1,126 @@
-﻿@page "/add-product"
-@page "/edit-product/{id}"
+﻿@page "/add-product/{Token}"
+@page "/edit-product/{ProductId:int}/{Token}"
 @rendermode InteractiveServer
 @using System.ComponentModel.DataAnnotations
 @using System.IO
+@using FruitSA.Web.Providers
 @using Microsoft.AspNetCore.Authorization
 @inherits ProductsBase
 
 <PageTitle>Fruit SA - Products</PageTitle>
-
-@if (ProductModel != null)
-{    
+@if (ProductModel == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
     <div class="row justify-content-center m-3">        
         <div class="col-md-8">
-        <EditForm Model="@ProductModel" OnValidSubmit="HandleValidSubmit" FormName="AddForm" onload="refreshPage()">
+            <EditForm Model="@ProductModel" OnValidSubmit="HandleValidSubmit" FormName="AddForm">
            
-            <input type="hidden" id="productId" @bind="ProductModel.ProductId">
-            <div class="card m-3" style="min-width:18rem; max-width:28rem;">
-                @if(Id == null)
-                {                   
-                    <img class="card-img-top imageThumbnail" src="images/default-image.jpg" style="margin-top:10px;" />
-                }
-                else
-                {
-                    <img class="card-img-top imageThumbnail" src="@($"images/{ProductModel.Image}")" style="margin-top:10px;" />
-                }
-
-                <div class="card-body">
-
-                    @if (Id == null)
-                    {
-                        <h4 style="text-align:center;">Add Product</h4>
+                <input type="hidden" id="productId" @bind="ProductModel.ProductId">
+                <div class="card m-3" style="min-width:18rem; max-width:22rem;">
+                    @if(ProductId == 0)
+                    {                   
+                        <img class="card-img-top imageThumbnail" src="images/default-image.jpg" style="margin-top:10px;" />
                     }
                     else
                     {
-                        <h4 style="text-align:center;">Edit @ProductModel.Name</h4>
+                        <img class="card-img-top imageThumbnail" src="@($"images/{ProductModel.Image}")" style="margin-top:10px;" />
                     }
-                    <DataAnnotationsValidator />
+
+                    <div class="card-body">
+
+                        @if (ProductId == 0)
+                        {
+                            <h4 style="text-align:center;">Add Product</h4>
+                        }
+                        else
+                        {
+                            <h4 style="text-align:center;">Edit @ProductModel.Name</h4>
+                        }
+                        <DataAnnotationsValidator />
                    
-                </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <label for="productCode">Product Code:</label>
-                        <InputText id="productCode" @bind-Value="ProductModel.ProductCode" class="form-control" readonly />
-                        <ValidationMessage For="@(() => ProductModel.ProductCode)" />
-                    </li>
-                    <li class="list-group-item">
-                        <label for="name">Name:</label>
-                        <InputText id="name" @bind-Value="ProductModel.Name" class="form-control" />
-                        <ValidationMessage For="@(() => ProductModel.Name)" />
-                    </li>
-                    <li class="list-group-item">
-                        <label for="description">Description:</label>
-                        <InputText id="description" @bind-Value="ProductModel.Description" class="form-control" />
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">
+                            <label for="productCode">Product Code:</label>
+                            <InputText id="productCode" @bind-Value="ProductModel.ProductCode" class="form-control" readonly />
+                            <ValidationMessage For="@(() => ProductModel.ProductCode)" />
+                        </li>
+                        <li class="list-group-item">
+                            <label for="name">Name:</label>
+                            <InputText id="name" @bind-Value="ProductModel.Name" class="form-control" />
+                            <ValidationMessage For="@(() => ProductModel.Name)" />
+                        </li>
+                        <li class="list-group-item">
+                            <label for="description">Description:</label>
+                            <InputText id="description" @bind-Value="ProductModel.Description" class="form-control" />
 
-                        <ValidationMessage For="@(() => ProductModel.Description)" />
-                    </li>
+                            <ValidationMessage For="@(() => ProductModel.Description)" />
+                        </li>
                     
-                    <li class="list-group-item">
-                        <label for="category">Category:</label>
-                        <InputSelect id="category" @bind-Value="ProductModel.CategoryName" class="form-control">
-                            <option value="">Select Category</option>
-                            @foreach (var category in Categories)
+                        <li class="list-group-item">
+                            <label for="category">Category:</label>
+                            <InputSelect id="category" @bind-Value="ProductModel.CategoryName" class="form-control">
+                                <option value="">Select Category</option>
+                                @foreach (var category in Categories)
+                                {
+                                    <option value="@category.Name">@category.Name</option>
+                                }
+                            </InputSelect>
+                            @if (!string.IsNullOrEmpty(ProductErrorMessage))
                             {
-                                <option value="@category.Name">@category.Name</option>
+                                <p style="color: red;">@ProductErrorMessage</p>
                             }
-                        </InputSelect>
-                        @if (!string.IsNullOrEmpty(ProductErrorMessage))
-                        {
-                            <p style="color: red;">@ProductErrorMessage</p>
-                        }
-                    </li>
-                    <li class="list-group-item">
-                        <label for="price">Price (R):</label>
-                        <InputNumber id="price" @bind-Value="ProductModel.Price" class="form-control" />
-                        <ValidationMessage For="@(() => ProductModel.Price)" />
-                        @if (!string.IsNullOrEmpty(PriceErrorMessage))
-                        {
-                            <p style="color: red;">@PriceErrorMessage</p>
-                        }
-                    </li>
-                    <li class="list-group-item">
-                        <label for="image">Upload Image:</label>
-                        <InputFile OnChange="@HandleFileChange" id="image" accept=".jpg,.jpeg,.png" />
-                        @if (!string.IsNullOrEmpty(ErrorMessage))
-                        {
-                            <p style="color: red;">@ErrorMessage</p>
-                        }
+                        </li>
+                        <li class="list-group-item">
+                            <label for="price">Price (R):</label>
+                            <InputNumber id="price" @bind-Value="ProductModel.Price" class="form-control" />
+                            <ValidationMessage For="@(() => ProductModel.Price)" />
+                            @if (!string.IsNullOrEmpty(PriceErrorMessage))
+                            {
+                                <p style="color: red;">@PriceErrorMessage</p>
+                            }
+                        </li>
+                        <li class="list-group-item">
+                            <label for="image">Upload Image:</label>
+                            <InputFile OnChange="@HandleFileChange" id="image" accept=".jpg,.jpeg,.png" />
+                            @if (!string.IsNullOrEmpty(ErrorMessage))
+                            {
+                                <p style="color: red;">@ErrorMessage</p>
+                            }
                             
-                    </li>
+                        </li>
                  
-                </ul>
-                <div class="card-body text-center">
-                    @if (Id == null)
-                    {
-                        <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-plus-square"></i> Add Product</button>
-                    }
-                    else
-                    {
-                        <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-edit"></i>Save Product</button>
-                        <button type="button" onclick="@HandleProductDelete" style="margin-top:20px;" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
-                    }
+                    </ul>
+                    <div class="card-body text-center">
+                        @if (ProductId == 0)
+                        {
+                            <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-plus-square"></i> Add Product</button>
+                        }
+                        else
+                        {
+                            <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-edit"></i>Save Product</button>
+                            <button type="button" onclick="@HandleProductDelete" style="margin-top:20px;" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</button>
+                        }
+                    </div>
                 </div>
-            </div>
-
-
-        </EditForm>
+            </EditForm>
         </div>
     </div>
-    <Confirmation ConfirmationChanged="ConfirmDelete_CLick"  @ref="DeleteConfirmation"></Confirmation>
+    <Confirmation ConfirmationChanged="ConfirmDelete_CLick" @ref="Confirmation" ConfirmationMessage=@($"Are you sure you want to Delete {@ProductModel.Name}?")></Confirmation>
+}
+@code {
+
+    [CascadingParameter]
+    public EventCallback<string> notifyLayout { get; set; }
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(Token))
+        {  
+            notifyLayout.InvokeAsync(Token);
+        }
+
+    }
 }

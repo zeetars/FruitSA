@@ -1,5 +1,6 @@
-﻿@page "/products"
+﻿@page "/products/{Token}"
 @using Microsoft.AspNetCore.Authorization
+@using System.IdentityModel.Tokens.Jwt
 @inherits ProductsBase
 @rendermode InteractiveServer
 @inject IJSRuntime JSRuntime
@@ -10,7 +11,7 @@
     td{vertical-align:middle;}
 </style>
 <h3>Products</h3>
-@if (!string.IsNullOrEmpty(LoginBase.authToken))
+@if (!string.IsNullOrEmpty(Token))
 {
     @if (!string.IsNullOrEmpty(ErrorMessage))
     {
@@ -18,8 +19,8 @@
         </p>
     }
     <p style="text-align:center;">
-        <a href="/add-product" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
-        <a href="/upload-products" class="btn btn-view btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
+        <a href="@($"/add-product/{@Token}")" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
+        <a href="@($"/upload-products/{@Token}")" class="btn btn-view btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
         <button onclick="@HandleDownloadProducts" class="btn btn-view btn-success"><i class="fas fa-download"></i> DOWNLOAD</button>
     </p>
 
@@ -50,7 +51,7 @@
 
                     <tr>
                         <td>                      
-                            <a href="@($"edit-product/{@product.ProductId}")"><img src="@($"/images/{product.Image}")" width="80px" height="80px" /></a>
+                            <a href="@($"edit-product/{@product.ProductId}/{@Token}")"><img src="@($"/images/{product.Image}")" width="80px" height="80px" /></a>
                         </td>
                         <td>@product.ProductCode</td>
                         <td>@product.Name</td>
@@ -59,16 +60,16 @@
                         <td>@product.Price</td>
                         <td>@product.CreatedDate.ToShortDateString()</td>
                         <td>
-                            <a href="@($"/view-product/{product.ProductId}")" class="btn btn-view btn-info"><i class="fas fa-info-circle"></i> View</a>
-
+                            <a href="@($"/view-product/{@product.ProductId}/{@Token}")" class="btn btn-view btn-info"><i class="fas fa-info-circle"></i> View</a>
+                          
                         </td>
                     </tr>
                 }
 
                 <tr>
                     <td colspan="8" style="text-align:center;">
-                        <a href="/add-product" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
-                        <a href="/upload-products" class="btn btn-view btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
+                        <a href="@($"/add-product/{@Token}")" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
+                        <a href="@($"/upload-products/{@Token}")" class="btn btn-view btn-success"><i class="fas fa-upload"></i> UPLOAD</a>
                         <button onclick="@HandleDownloadProducts" class="btn btn-view btn-success"><i class="fas fa-download"></i> DOWNLOAD</button>
                     </td>
                 </tr>
@@ -81,10 +82,23 @@
             <button class="btn btn-view btn-outline-success" disabled="@(currentPage == totalPages)" @onclick="NextPage" style="min-width:90px;">Next <i class="fas fa-angle-double-right"></i></button>
         </div>
     }
-
+    <Confirmation ConfirmationChanged="ConfirmDownload_CLick" @ref="Confirmation" ConfirmationTitle="Download Confirmation" ConfirmationMessage="Are you sure you want to Download all Products?"></Confirmation>
 }
 else
 {
     @inject NavigationManager NavigationManager
     NavigationManager.NavigateTo("/login");
+}
+@code {
+    
+    [CascadingParameter]
+    public EventCallback<string> notifyLayout { get; set; }
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(Token))
+        { 
+            notifyLayout.InvokeAsync(Token);
+        }
+
+    }
 }

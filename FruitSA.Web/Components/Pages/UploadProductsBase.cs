@@ -8,14 +8,14 @@ namespace FruitSA.Web.Components.Pages
 {
     public class UploadProductsBase:ComponentBase
     {
-       
-        
+
+        [Parameter]
+        public string Token { get; set; } = "";
         [Inject]
         NavigationManager NavigationManager { get; set; }
         [Inject]
         public IProductService ProductService { get; set; }
-        //public IEnumerable<Product> Products { get; set; } = Enumerable.Empty<Product>();
-
+        
         UniqueCodeGenerator UniqueCodeGenerator { get; set; }
 
         private IBrowserFile? selectedFile;
@@ -60,7 +60,7 @@ namespace FruitSA.Web.Components.Pages
                                 products.Add(product);
                             }
 
-                            await ProductService.CreateProducts(LoginBase.authToken,products);
+                            await ProductService.CreateProducts(Token,products);
                         }
                     }
 
@@ -78,7 +78,6 @@ namespace FruitSA.Web.Components.Pages
                 errorMessage = "Please select a file.";
                 return;
             }
-
         }      
 
         public void HandleFileChange(InputFileChangeEventArgs e)

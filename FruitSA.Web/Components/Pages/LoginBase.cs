@@ -8,37 +8,14 @@ namespace FruitSA.Web.Components.Pages
     public class LoginBase: ComponentBase
     {
         [Parameter]
-        public string? Token { get; set; } = "";
-        public static string authToken { get; set; } = "";
+        public string Token { get; set; } = "";       
         [Inject]
         NavigationManager? NavigationManager { get; set; }
         [Inject]
-        IUserService? userService { get; set; }
-        public LoginViewModel? User { get; set; } = new LoginViewModel();
-        public static string Email { get; set; } = "";  
+        IUserService? userService { get; set; } 
+        public LoginViewModel? User { get; set; } = new LoginViewModel();          
         public string errorMessage = "";
         public string successMessage = "";
-
-        protected override async Task OnInitializedAsync()
-        {            
-            try
-            {
-                if (Token != "")
-                {
-                    var handler = new JwtSecurityTokenHandler();
-                    var decodedValue = handler.ReadJwtToken(Token);
-                    var emailClaim = decodedValue.Claims.FirstOrDefault(claim => claim.Type == "Email");
-                    Email = emailClaim.Value;
-                    authToken = Token;
-                }
-            }
-            catch (Exception)
-            {
-                NavigationManager.NavigateTo("/login");
-            }
-            
-        }
-
         public async Task HandleLogin()
         {            
             errorMessage = "";
@@ -52,19 +29,15 @@ namespace FruitSA.Web.Components.Pages
             {
                 UserManagerResponse response = await userService.Login(User);
                 if (response.IsSuccess)
-                {
-                   
-                    var message = response.Message;
-                    if (message != null)
+                { 
+                    var token = response.Message;
+                    if (token != null)
                     {
-                        StateHasChanged();
-                        NavigationManager.NavigateTo($"/{message}");
-                    }                   
-
+                       NavigationManager.NavigateTo($"/{token}");
+                    } 
                 }
                 else
                 {
-
                     errorMessage = response.Message;                   
                     return;
                 }

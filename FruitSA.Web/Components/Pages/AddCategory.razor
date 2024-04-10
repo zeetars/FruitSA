@@ -1,5 +1,5 @@
-﻿@page "/add-category"
-@page "/edit-category/{id}"
+﻿@page "/add-category/{Token}"
+@page "/edit-category/{CategoryId:int}/{Token}"
 @rendermode InteractiveServer
 @using System.ComponentModel.DataAnnotations
 @using System.IO
@@ -18,7 +18,7 @@
                 <div class="card m-3" style="min-width:18rem; max-width:28rem;">
 
                      <div class="card-body">
-                        @if (Id == null)
+                        @if (CategoryId == 0)
                         {
                             <h4 style="text-align:center;">Add Catecory</h4>
                         }
@@ -50,11 +50,9 @@
                                 <option value="0">No</option>
                             </InputSelect>
                         </li>
-
-                       
                     </ul>
                     <div class="card-body text-center">
-                        @if (Id == null)
+                        @if (CategoryId == 0)
                         {
                             <button type="submit" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-plus-square"></i> Add Category</button>
                         }
@@ -68,6 +66,17 @@
             </EditForm>
         </div>
     </div>
-    
+}
+@code {
+    [CascadingParameter]
+    public EventCallback<string> notifyLayout { get; set; }
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(Token))
+        {
+            notifyLayout.InvokeAsync(Token);
 
+        }
+
+    }
 }

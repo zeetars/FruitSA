@@ -1,7 +1,6 @@
 ﻿using FruitSA.API.Auth.Model;
 using FruitSA.Web.Services;
 using Microsoft.AspNetCore.Components;
-using System.Xml;
 
 namespace FruitSA.Web.Components.Pages
 {
@@ -40,7 +39,7 @@ namespace FruitSA.Web.Components.Pages
                 if (response.IsSuccess)
                 {
                     userManagerResponse = response;
-                    NavigationManager.NavigateTo("/");
+                    NavigationManager.NavigateTo("/login");
                 }
                 else
                 {

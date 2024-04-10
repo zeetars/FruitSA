@@ -8,7 +8,9 @@ namespace FruitSA.Web.Components.Pages
     public class CategoriesBase: ComponentBase
     {
         [Parameter]
-        public string? Id { get; set; }  
+        public int CategoryId { get; set; }
+        [Parameter]
+        public string Token { get; set; } = "";
         [Inject]
         NavigationManager? NavigationManager { get; set; } 
         [Inject]
@@ -23,12 +25,11 @@ namespace FruitSA.Web.Components.Pages
             errorMessage = "";
             try
             {
-                Categories = (await CategoryService.GetCategories(LoginBase.authToken)).ToList();
+                Categories = (await CategoryService.GetCategories(Token)).ToList();
 
-                int.TryParse(Id, out int CategoryId);
                 if (CategoryId != 0)
                 {
-                    Category = await CategoryService.GetCategoryById(LoginBase.authToken, CategoryId);
+                    Category = await CategoryService.GetCategoryById(Token, CategoryId);
 
                 }
             }
@@ -43,11 +44,11 @@ namespace FruitSA.Web.Components.Pages
         
         protected async Task HandleValidSubmit()
         {
-            int.TryParse(Id, out int CategoryId);            
+                        
             Category result = null;
             errorMessage = "";
             var uniqueCode = Category.CategoryCode.ToUpper();
-            if (Id == null)
+            if (CategoryId == 0)
             {
                 if (uniqueCode != null)
                 {
@@ -92,11 +93,11 @@ namespace FruitSA.Web.Components.Pages
             {
                 if (CategoryId != 0)
                 {
-                    result = await CategoryService.UpdateCategory(LoginBase.authToken, Category);
+                    result = await CategoryService.UpdateCategory(Token, Category);
                 }
                 else
                 {
-                    result = await CategoryService.CreateCategory(LoginBase.authToken, Category);                }
+                    result = await CategoryService.CreateCategory(Token, Category);                }
 
             }
             catch (Exception ex)
@@ -106,7 +107,7 @@ namespace FruitSA.Web.Components.Pages
             }            
             if (result != null)
             {
-                NavigationManager.NavigateTo("/categories");
+                NavigationManager.NavigateTo($"/categories/{Token}");
             }
         }
        

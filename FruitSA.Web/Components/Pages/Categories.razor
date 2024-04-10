@@ -1,17 +1,17 @@
-﻿@page "/categories"
+﻿@page "/categories/{Token}"
 @using Microsoft.AspNetCore.Authorization
 @inherits CategoriesBase
 @rendermode InteractiveServer
 
 <PageTitle>Fruit SA - Categories</PageTitle>
 <h3>Categories</h3>
-@if (!string.IsNullOrEmpty(LoginBase.authToken))
+@if (!string.IsNullOrEmpty(@Token))
 {
     @if (!string.IsNullOrEmpty(errorMessage))
     {
         <p style="color: red;" class="card-text">@errorMessage</p>
     }
-    <p style="text-align:center;"><a href="/add-category" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a></p>
+    <p style="text-align:center;"><a href="@($"/add-category/{@Token}")" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a></p>
 
     @if (Categories == null)
     {
@@ -50,7 +50,7 @@
 
                         <td>@category.CreatedDate.ToShortDateString()</td>
                         <td>
-                            <a href="@($"/edit-category/{category.CategoryId}")" class="btn btn-view btn-info"><i class="fas fa-edit"></i> Edit</a>
+                            <a href="@($"/edit-category/{category.CategoryId}/{@Token}")" class="btn btn-view btn-info"><i class="fas fa-edit"></i> Edit</a>
 
                         </td>
                     </tr>
@@ -58,7 +58,7 @@
 
                 <tr>
                     <td colspan="8" style="text-align:center;">
-                        <a href="/add-category" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
+                        <a href="@($"/add-category/{@Token}")" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>
                     </td>
                 </tr>
             </tbody>
@@ -71,5 +71,17 @@ else
     @inject NavigationManager NavigationManager
     NavigationManager.NavigateTo("/login");
 }
+@code {
 
+    [CascadingParameter]
+    public EventCallback<string> notifyLayout { get; set; }
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(Token))
+        {
+            notifyLayout.InvokeAsync(Token);
+        }
+
+    }
+}
 
