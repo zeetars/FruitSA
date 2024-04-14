@@ -9,6 +9,9 @@ namespace FruitSA.Web.Components.Pages
         public string ConfirmationTitle { get; set; } = "Delete Confirmation";
         [Parameter]
         public string ConfirmationMessage { get; set; } = "Are you sure you want to Delete this Product?";
+        [Parameter]
+        public string ActionButton { get; set; } = "Delete";
+
         public void Show()
         {
             ShowConfirmation = true;

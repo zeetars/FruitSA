@@ -4,29 +4,36 @@
 @inherits RegisterBase
 
 <div class="row justify-content-center m-3">
-
-    @if (errorMessage != "")
-    {
-        <div class="alert alert-danger" role="alert">
-            @errorMessage
+    <div class="col-md-8">
+        <div class="card m-3" style="min-width:18rem; max-width:28rem; border:none;">
+            @if (errorMessage != "")
+            {
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                        <li>
+                            @errorMessage
+                        </li>
+                    </ul>
+                </div>
+                errorMessage = "";
+            }
+            @if (error == "Exception")
+            {
+                <div class="alert alert-danger" role="alert">
+                    <ul>
+                        <li>
+                            Passwords must have at least one non alphanumeric character.
+                        </li>
+                        <li>Passwords must have at least one digit ('0'-'9').</li>
+                        <li>Passwords must have at least one uppercase ('A'-'Z').</li>
+                        <li>Passwords must have at least one lowercase ('a'-'z').</li>
+                        <li>Passwords must have at least one special character</li>
+                    </ul>
+                </div>
+                error = "";
+            }
         </div>
-        errorMessage = "";
-    }
-    @if (error == "Exception")
-    {
-        <div class="alert alert-danger" role="alert">
-            <ul>
-                <li>
-                    Passwords must have at least one non alphanumeric character.
-                </li>
-                <li>Passwords must have at least one digit ('0'-'9').</li>
-                <li>Passwords must have at least one uppercase ('A'-'Z').</li>
-                <li>Passwords must have at least one lowercase ('a'-'z').</li>
-                <li>Passwords must have at least one special character</li>
-            </ul>
-        </div>
-        error = "";
-    }
+    </div>
     <div class="col-md-8">
         <EditForm Model="@User" OnValidSubmit="@HandleRegistration" FormName="RegisterForm">
 
