@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FruitSA.API", "FruitSA.API\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FruitSA.Web", "FruitSA.Web\FruitSA.Web.csproj", "{27EA8949-1D9C-437C-9A08-A7C3D3089927}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FruitSA.API.Tests", "FruitSA.API.Tests\FruitSA.API.Tests.csproj", "{4CAAC94E-3D75-4A24-B876-A7FBFA7C6532}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{27EA8949-1D9C-437C-9A08-A7C3D3089927}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{27EA8949-1D9C-437C-9A08-A7C3D3089927}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{27EA8949-1D9C-437C-9A08-A7C3D3089927}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CAAC94E-3D75-4A24-B876-A7FBFA7C6532}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CAAC94E-3D75-4A24-B876-A7FBFA7C6532}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CAAC94E-3D75-4A24-B876-A7FBFA7C6532}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CAAC94E-3D75-4A24-B876-A7FBFA7C6532}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -8,7 +8,6 @@ namespace FruitSA.Web.Components.Pages
 {
     public class UploadProductsBase:ComponentBase
     {
-
         [Parameter]
         public string Token { get; set; } = "";
         [Inject]
@@ -25,8 +24,7 @@ namespace FruitSA.Web.Components.Pages
         //Upload Excel data to database.
         //EPPlus.
         protected async Task UploadProducts()
-        {        
-
+        { 
             errorMessage = "";
             successMessage = "";
             if (selectedFile != null)
@@ -78,7 +76,7 @@ namespace FruitSA.Web.Components.Pages
                 errorMessage = "Please select a file.";
                 return;
             }
-        }      
+        }
 
         public void HandleFileChange(InputFileChangeEventArgs e)
         {

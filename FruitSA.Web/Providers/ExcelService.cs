@@ -1,18 +1,15 @@
 ﻿using OfficeOpenXml;
 using FruitSA.Model;
 
-
 namespace FruitSA.Web.Providers
 {
     public class ExcelService
     {
-
         private readonly List<Product> Products;
 
         public ExcelService(List<Product> Products)
         {
-            this.Products = Products;
-            
+            this.Products = Products;            
         }
 
         public async Task<byte[]> GenerateExcelFileAsync()

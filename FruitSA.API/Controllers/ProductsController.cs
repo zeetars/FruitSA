@@ -114,8 +114,9 @@ namespace FruitSA.API.Controllers
                 {
                     return NotFound($"There is no Product with ID: {Product.ProductId}");
                 }
-
-                return await productRepository.UpdateProduct(Product);
+               
+                var updatedProduct = await productRepository.UpdateProduct(Product);
+                return Ok(updatedProduct);
 
             }
             catch (Exception)
@@ -135,7 +136,8 @@ namespace FruitSA.API.Controllers
                     return NotFound($"You cannot delete Product with ID: {id}");
                 }
 
-                return await productRepository.DeleteProduct(id);
+                var deletedProduct = await productRepository.DeleteProduct(id);
+                return Ok(deletedProduct);
             }
             catch (Exception)
             {

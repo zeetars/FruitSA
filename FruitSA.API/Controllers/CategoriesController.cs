@@ -79,7 +79,8 @@ namespace FruitSA.API.Controllers
                     return NotFound($"There is no Category with ID: {Category.CategoryId}");
                 }
 
-                return await categoryRepository.UpdateCategory(Category);
+                var updatedCategory = await categoryRepository.UpdateCategory(Category);
+                return Ok(updatedCategory);
 
             }
             catch (Exception)

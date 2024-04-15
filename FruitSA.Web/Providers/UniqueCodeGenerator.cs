@@ -7,6 +7,7 @@
         public static string GenerateUniqueCode()
         {
             string yearMonth = DateTime.Now.ToString("yyyyMM");
+
             string sequentialCode = GetSequentialCode();
 
             return $"{yearMonth}-{sequentialCode}";
@@ -17,7 +18,9 @@
             lock (typeof(UniqueCodeGenerator))
             {
                 string sequentialCode = sequenceNumber.ToString().PadLeft(3, '0');
+
                 sequenceNumber = (sequenceNumber % 999) + 1; // Reset sequence if it reaches 999
+                
                 return sequentialCode;
             }
         }

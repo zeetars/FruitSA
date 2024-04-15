@@ -4,10 +4,10 @@ namespace FruitSA.Web.Providers
 {
     public class UniqueCodeValidator
     {
-
         public static bool Validate(string code)
         {
             bool isValid = CheckFormat(code);
+
             return isValid;
         }
 

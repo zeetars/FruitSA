@@ -8,7 +8,6 @@ namespace FruitSA.Web.Services
     public class CategoryService : ICategoryService
     {
         private readonly HttpClient httpClient;
-
         public CategoryService(HttpClient httpClient) 
         { 
             this.httpClient = httpClient;
@@ -17,6 +16,7 @@ namespace FruitSA.Web.Services
         public async Task<IEnumerable<Category>> GetCategories(string authToken)
         {
             TokenAuthorization(authToken);
+
             return await httpClient.GetFromJsonAsync<Category[]>("api/categories");
         }
 
@@ -29,11 +29,16 @@ namespace FruitSA.Web.Services
         public async Task<Category> UpdateCategory(string authToken, Category Category)
         {
             TokenAuthorization(authToken);
+
             var apiUrl = "api/categories";
+
             var jsonContent = new StringContent(JsonConvert.SerializeObject(Category), Encoding.UTF8,
                 "application/json");
+
             var response = await httpClient.PutAsync(apiUrl, jsonContent);
+
             response.EnsureSuccessStatusCode();
+
             var updatedCategory = await response.Content.ReadFromJsonAsync<Category>();
 
             return updatedCategory;
@@ -43,11 +48,16 @@ namespace FruitSA.Web.Services
         public async Task<Category> CreateCategory(string authToken, Category Category)
         {
             TokenAuthorization(authToken);
+
             var apiUrl = "api/categories";
+
             var jsonContent = new StringContent(JsonConvert.SerializeObject(Category), Encoding.UTF8,
                 "application/json");
+
             var response = await httpClient.PostAsync(apiUrl, jsonContent);
+
             response.EnsureSuccessStatusCode();
+
             var createdCategory = await response.Content.ReadFromJsonAsync<Category>();
 
             return createdCategory;

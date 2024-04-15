@@ -18,19 +18,20 @@ namespace FruitSA.API.Controllers
         }
 
         [HttpPost]
-        public async Task CreateProducts(List<Product> Products)
+        public async Task<ActionResult> CreateProducts(List<Product> Products)
         {
             try
             {
-                if (Products != null)
+                if (Products == null)
                 {
-                    await uploadRepository.AddProducts(Products);
+                    return BadRequest();
                 }
-
+                await uploadRepository.AddProducts(Products);
+                return Ok();
             }
             catch (Exception)
             {
-                StatusCode(StatusCodes.Status500InternalServerError, "Error inserting the Products.");
+               return  StatusCode(StatusCodes.Status500InternalServerError, "Error inserting the Products.");
             }
         }
     }

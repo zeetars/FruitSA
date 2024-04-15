@@ -34,9 +34,7 @@
             <tbody>
                 @foreach (var category in Categories)
                 {
-
                     <tr>
-
                         <td>@category.CategoryCode</td>
                         <td>@category.Name</td>
                         @if (category.IsActive == 1)
@@ -46,8 +44,7 @@
                         else
                         {
                             <td>No</td>
-                        }                   
-
+                        } 
                         <td>@category.CreatedDate.ToShortDateString()</td>
                         <td>
                             <a href="@($"/edit-category/{category.CategoryId}/{@Token}")" class="btn btn-view btn-info"><i class="fas fa-edit"></i> Edit</a>
@@ -55,7 +52,6 @@
                         </td>
                     </tr>
                 }
-
                 <tr>
                     <td colspan="8" style="text-align:center;">
                         <a href="@($"/add-category/{@Token}")" class="btn btn-view btn-success"><i class="fas fa-plus-square"></i> ADD</a>

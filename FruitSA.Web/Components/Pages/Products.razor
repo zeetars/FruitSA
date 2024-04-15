@@ -48,10 +48,9 @@
             <tbody>
                 @foreach (var product in Products)
                 {
-
                     <tr>
                         <td>                      
-                            <a href="@($"edit-product/{@product.ProductId}/{@Token}")"><img src="@($"~/images/{product.Image}")" width="80px" height="80px" /></a>
+                            <a href="@($"edit-product/{@product.ProductId}/{@Token}")"><img src="@($"images/{product.Image}")" width="80px" height="80px" /></a>
                         </td>
                         <td>@product.ProductCode</td>
                         <td>@product.Name</td>

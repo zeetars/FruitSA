@@ -78,7 +78,6 @@ namespace FruitSA.Web.Components.Pages
                 }
                 else
                 {
-
                     string uniqueCode = UniqueCodeGenerator.GenerateUniqueCode();
                     if (uniqueCode != null)
                     {
@@ -172,17 +171,13 @@ namespace FruitSA.Web.Components.Pages
                 Product.Image = "default-image.jpg";
             }
 
-
             Product result = null;
             if (ProductId != 0)
             {
-
                 result = await ProductService.UpdateProduct(Token, Product);
-
             }
             else
-            {
-               
+            {               
                 result = await ProductService.CreateProduct(Token, Product);
             }
 
